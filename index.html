@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+Here is your updated `index.html` file with the Formspree endpoint successfully wired into the contact form (`action="[https://formspree.io/f/mgakvnbe](https://formspree.io/f/mgakvnbe)"`).
+
+You can copy this complete code, save it locally into your `index.html` file, commit the change in GitHub Desktop, and push it to your repository.
+
+```html
+<!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
@@ -23,15 +28,11 @@
             --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
             --card-shadow-hover: 0 10px 15px -3px rgba(15, 23, 42, 0.06), 0 4px 6px -2px rgba(15, 23, 42, 0.03);
         }
-
-
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
-
-
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg-offwhite);
@@ -39,8 +40,6 @@
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
         }
-
-
         /* Navigation */
         nav {
             position: fixed;
@@ -56,8 +55,6 @@
             align-items: center;
             padding: 1rem 5%;
         }
-
-
         .logo {
             display: flex;
             align-items: center;
@@ -65,8 +62,6 @@
             text-decoration: none;
             color: var(--text-slate);
         }
-
-
         .logo-mark {
             font-family: 'JetBrains Mono', monospace;
             font-weight: 700;
@@ -80,13 +75,9 @@
             align-items: center;
             border: 1px solid var(--text-slate);
         }
-
-
         .logo-mark span {
             color: #60A5FA;
         }
-
-
         .logo-expansion {
             font-size: 0.78rem;
             font-weight: 500;
@@ -96,22 +87,16 @@
             border-left: 1px solid var(--border-subtle);
             padding-left: 0.75rem;
         }
-
-
         .logo-expansion strong {
             color: var(--text-slate);
             font-weight: 600;
         }
-
-
         .nav-links {
             display: flex;
             gap: 2rem;
             list-style: none;
             align-items: center;
         }
-
-
         .nav-links a {
             text-decoration: none;
             color: var(--text-muted);
@@ -119,13 +104,9 @@
             font-weight: 500;
             transition: color 0.2s ease;
         }
-
-
         .nav-links a:hover {
             color: var(--accent-cobalt);
         }
-
-
         .cta-button {
             background-color: var(--text-slate);
             color: white;
@@ -136,13 +117,9 @@
             text-decoration: none;
             transition: background-color 0.2s ease;
         }
-
-
         .cta-button:hover {
             background-color: var(--accent-cobalt);
         }
-
-
         /* Hero Section */
         header.hero {
             padding: 10.5rem 5% 6rem 5%;
@@ -153,8 +130,6 @@
             gap: 4rem;
             align-items: center;
         }
-
-
         .hero-badge {
             display: inline-flex;
             align-items: center;
@@ -168,8 +143,6 @@
             margin-bottom: 1.25rem;
             border: 1px solid #DBEAFE;
         }
-
-
         .hero-lab-title {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.82rem;
@@ -177,8 +150,6 @@
             margin-bottom: 0.75rem;
             letter-spacing: 0.02em;
         }
-
-
         .hero-lab-title .acronym-highlight {
             color: var(--accent-cobalt);
             font-weight: 600;
@@ -188,14 +159,10 @@
             border: 1px solid #DBEAFE;
             margin-right: 0.35rem;
         }
-
-
         .hero-lab-title .initial {
             color: var(--text-slate);
             font-weight: 600;
         }
-
-
         .hero h1 {
             font-size: 3.15rem;
             font-weight: 700;
@@ -203,27 +170,19 @@
             line-height: 1.15;
             margin-bottom: 1.5rem;
         }
-
-
         .hero h1 span {
             color: var(--accent-cobalt);
         }
-
-
         .hero p {
             font-size: 1.12rem;
             color: var(--text-muted);
             margin-bottom: 2.5rem;
             line-height: 1.7;
         }
-
-
         .hero-cta-group {
             display: flex;
             gap: 1rem;
         }
-
-
         .btn-primary {
             background-color: var(--accent-cobalt);
             color: white;
@@ -238,13 +197,9 @@
             font-family: inherit;
             font-size: 0.95rem;
         }
-
-
         .btn-primary:hover {
             background-color: var(--accent-cobalt-hover);
         }
-
-
         .btn-secondary {
             background-color: var(--surface-white);
             color: var(--text-slate);
@@ -255,13 +210,9 @@
             text-decoration: none;
             transition: all 0.2s;
         }
-
-
         .btn-secondary:hover {
             border-color: var(--text-slate);
         }
-
-
         /* Hero Graphic / Code Preview Card */
         .hero-card {
             background: var(--surface-white);
@@ -270,8 +221,6 @@
             padding: 1.75rem;
             box-shadow: var(--card-shadow);
         }
-
-
         .card-header {
             display: flex;
             align-items: center;
@@ -280,14 +229,10 @@
             padding-bottom: 0.75rem;
             border-bottom: 1px solid var(--border-subtle);
         }
-
-
         .dot { width: 10px; height: 10px; border-radius: 50%; }
         .dot-red { background: #EF4444; }
         .dot-yellow { background: #F59E0B; }
         .dot-green { background: #10B981; }
-
-
         .code-snippet {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.83rem;
@@ -298,25 +243,17 @@
             border: 1px solid var(--border-subtle);
             line-height: 1.65;
         }
-
-
         .code-snippet .keyword { color: var(--accent-cobalt); font-weight: 600; }
         .code-snippet .string { color: var(--accent-emerald); }
-
-
         /* Sections General */
         section {
             padding: 6rem 5%;
             max-width: 1200px;
             margin: 0 auto;
         }
-
-
         .section-divider {
             border-top: 1px solid var(--border-subtle);
         }
-
-
         .section-eyebrow {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.8rem;
@@ -327,37 +264,27 @@
             margin-bottom: 0.75rem;
             display: block;
         }
-
-
         section header {
             text-align: center;
             max-width: 720px;
             margin: 0 auto 4rem auto;
         }
-
-
         section header h2 {
             font-size: 2.25rem;
             font-weight: 700;
             letter-spacing: -0.025em;
             margin-bottom: 1rem;
         }
-
-
         section header p {
             color: var(--text-muted);
             font-size: 1.05rem;
         }
-
-
         /* Philosophy & Shared 3-Column Grid */
         .grid-3 {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 2rem;
         }
-
-
         .feature-box {
             background: var(--surface-white);
             border: 1px solid var(--border-subtle);
@@ -365,8 +292,6 @@
             border-radius: 10px;
             box-shadow: var(--card-shadow);
         }
-
-
         .feature-icon {
             width: 40px;
             height: 40px;
@@ -382,21 +307,15 @@
             margin-bottom: 1.25rem;
             border: 1px solid #DBEAFE;
         }
-
-
         .feature-box h3 {
             font-size: 1.2rem;
             font-weight: 600;
             margin-bottom: 0.75rem;
         }
-
-
         .feature-box p {
             color: var(--text-muted);
             font-size: 0.95rem;
         }
-
-
         /* 1. Portfolio Section */
         .project-card {
             background: var(--surface-white);
@@ -408,31 +327,23 @@
             flex-direction: column;
             transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
         }
-
-
         .project-card:hover {
             transform: translateY(-3px);
             box-shadow: var(--card-shadow-hover);
             border-color: #CBD5E1;
         }
-
-
         .project-preview {
             background: var(--bg-offwhite);
             border-bottom: 1px solid var(--border-subtle);
             padding: 1.5rem;
             position: relative;
         }
-
-
         .preview-topbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
         }
-
-
         .module-status {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.75rem;
@@ -443,8 +354,6 @@
             border-radius: 4px;
             font-weight: 500;
         }
-
-
         .preview-wireframe {
             background: var(--surface-white);
             border: 1px solid var(--border-subtle);
@@ -454,37 +363,27 @@
             font-size: 0.78rem;
             color: var(--text-muted);
         }
-
-
         .wireframe-row {
             display: flex;
             justify-content: space-between;
             padding: 0.35rem 0;
             border-bottom: 1px dashed var(--border-subtle);
         }
-
-
         .wireframe-row:last-child {
             border-bottom: none;
         }
-
-
         .project-body {
             padding: 1.75rem;
             display: flex;
             flex-direction: column;
             flex-grow: 1;
         }
-
-
         .tech-tags {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
             margin-bottom: 1rem;
         }
-
-
         .tech-tag {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.75rem;
@@ -495,24 +394,18 @@
             border-radius: 4px;
             font-weight: 500;
         }
-
-
         .project-body h3 {
             font-size: 1.2rem;
             font-weight: 600;
             margin-bottom: 0.65rem;
             letter-spacing: -0.015em;
         }
-
-
         .project-body p {
             color: var(--text-muted);
             font-size: 0.925rem;
             margin-bottom: 1.75rem;
             flex-grow: 1;
         }
-
-
         .btn-launch {
             display: inline-flex;
             align-items: center;
@@ -529,15 +422,11 @@
             text-decoration: none;
             transition: all 0.2s ease;
         }
-
-
         .btn-launch:hover {
             background: var(--accent-cobalt);
             color: white;
             border-color: var(--accent-cobalt);
         }
-
-
         /* 2. Services Section */
         .service-card {
             background: var(--surface-white);
@@ -548,8 +437,6 @@
             display: flex;
             flex-direction: column;
         }
-
-
         .service-tag {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.75rem;
@@ -557,22 +444,16 @@
             font-weight: 500;
             margin-bottom: 0.75rem;
         }
-
-
         .service-card h3 {
             font-size: 1.25rem;
             font-weight: 600;
             margin-bottom: 0.75rem;
         }
-
-
         .service-card > p {
             color: var(--text-muted);
             font-size: 0.95rem;
             margin-bottom: 1.5rem;
         }
-
-
         .deliverables-list {
             list-style: none;
             border-top: 1px solid var(--border-subtle);
@@ -582,8 +463,6 @@
             flex-direction: column;
             gap: 0.65rem;
         }
-
-
         .deliverables-list li {
             font-size: 0.875rem;
             color: var(--text-slate);
@@ -591,16 +470,12 @@
             align-items: flex-start;
             gap: 0.6rem;
         }
-
-
         .deliverables-list li::before {
             content: "✓";
             color: var(--accent-emerald);
             font-weight: 700;
             font-family: 'JetBrains Mono', monospace;
         }
-
-
         /* 3. About / Studio Background Section */
         .about-grid {
             display: grid;
@@ -608,8 +483,6 @@
             gap: 4rem;
             align-items: start;
         }
-
-
         .about-content h2 {
             font-size: 2.15rem;
             font-weight: 700;
@@ -617,16 +490,12 @@
             margin-bottom: 1.25rem;
             line-height: 1.2;
         }
-
-
         .about-content p {
             color: var(--text-muted);
             font-size: 1.02rem;
             margin-bottom: 1.25rem;
             line-height: 1.75;
         }
-
-
         .credentials-panel {
             background: var(--surface-white);
             border: 1px solid var(--border-subtle);
@@ -634,8 +503,6 @@
             padding: 2rem;
             box-shadow: var(--card-shadow);
         }
-
-
         .credentials-panel h3 {
             font-size: 1rem;
             font-weight: 600;
@@ -643,18 +510,12 @@
             padding-bottom: 0.75rem;
             border-bottom: 1px solid var(--border-subtle);
         }
-
-
         .credential-item {
             margin-bottom: 1.25rem;
         }
-
-
         .credential-item:last-child {
             margin-bottom: 0;
         }
-
-
         .credential-label {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.75rem;
@@ -663,21 +524,15 @@
             margin-bottom: 0.25rem;
             display: block;
         }
-
-
         .credential-value {
             font-weight: 600;
             font-size: 0.95rem;
             color: var(--text-slate);
         }
-
-
         .credential-sub {
             font-size: 0.85rem;
             color: var(--text-muted);
         }
-
-
         /* 4. Contact Section */
         .contact-container {
             max-width: 720px;
@@ -688,36 +543,26 @@
             padding: 2.75rem;
             box-shadow: var(--card-shadow);
         }
-
-
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1.5rem;
             margin-bottom: 1.5rem;
         }
-
-
         .form-group {
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
             margin-bottom: 1.5rem;
         }
-
-
         .form-grid .form-group {
             margin-bottom: 0;
         }
-
-
         .form-group label {
             font-size: 0.875rem;
             font-weight: 600;
             color: var(--text-slate);
         }
-
-
         .form-control {
             width: 100%;
             padding: 0.75rem 1rem;
@@ -729,22 +574,16 @@
             border-radius: 6px;
             transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
         }
-
-
         .form-control:focus {
             outline: none;
             background-color: var(--surface-white);
             border-color: var(--accent-cobalt);
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
         }
-
-
         textarea.form-control {
             resize: vertical;
             min-height: 120px;
         }
-
-
         .form-footer {
             display: flex;
             justify-content: space-between;
@@ -752,15 +591,11 @@
             gap: 1rem;
             flex-wrap: wrap;
         }
-
-
         .form-note {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.78rem;
             color: var(--text-muted);
         }
-
-
         /* Footer */
         footer {
             border-top: 1px solid var(--border-subtle);
@@ -768,8 +603,6 @@
             padding: 2.5rem 5%;
             margin-top: 4rem;
         }
-
-
         .footer-inner {
             max-width: 1200px;
             margin: 0 auto;
@@ -781,8 +614,6 @@
             font-size: 0.875rem;
             color: var(--text-muted);
         }
-
-
         .footer-status {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.8rem;
@@ -790,16 +621,12 @@
             align-items: center;
             gap: 0.5rem;
         }
-
-
         /* Responsive */
         @media (max-width: 1080px) {
             .logo-expansion {
                 display: none;
             }
         }
-
-
         @media (max-width: 968px) {
             .hero, .about-grid {
                 grid-template-columns: 1fr;
@@ -816,8 +643,6 @@
                 display: none;
             }
         }
-
-
         @media (max-width: 640px) {
             .hero h1 {
                 font-size: 2.35rem;
@@ -832,8 +657,6 @@
     </style>
 </head>
 <body>
-
-
     <!-- Navigation -->
     <nav>
         <a href="#" class="logo" aria-label="PASTEL — Pragmatic Applied Systems & Training Engineering Lab">
@@ -848,8 +671,6 @@
         </ul>
         <a href="#contact" class="cta-button">Initiate Project</a>
     </nav>
-
-
     <!-- Hero Section -->
     <header class="hero">
         <div>
@@ -889,8 +710,6 @@
             </div>
         </div>
     </header>
-
-
     <!-- Philosophy Section -->
     <section id="philosophy" class="section-divider">
         <header>
@@ -916,8 +735,6 @@
             </div>
         </div>
     </section>
-
-
     <!-- 1. Featured Learning Modules (#portfolio) -->
     <section id="portfolio" class="section-divider">
         <header>
@@ -950,8 +767,6 @@
                     <a href="#contact" class="btn-launch">Launch Simulation &rarr;</a>
                 </div>
             </article>
-
-
             <!-- Module 2 -->
             <article class="project-card">
                 <div class="project-preview">
@@ -976,8 +791,6 @@
                     <a href="#contact" class="btn-launch">Launch Simulation &rarr;</a>
                 </div>
             </article>
-
-
             <!-- Module 3 -->
             <article class="project-card">
                 <div class="project-preview">
@@ -1004,8 +817,6 @@
             </article>
         </div>
     </section>
-
-
     <!-- 2. Boutique Studio Offerings (#services) -->
     <section id="services" class="section-divider">
         <header>
@@ -1025,8 +836,6 @@
                     <li>Performance rubrics &amp; competency benchmarks</li>
                 </ul>
             </div>
-
-
             <!-- Pillar 2 -->
             <div class="service-card">
                 <span class="service-tag">PILLAR_02 // ENGINEERING</span>
@@ -1038,8 +847,6 @@
                     <li>xAPI / SCORM 2004 LMS &amp; LRS instrumentation</li>
                 </ul>
             </div>
-
-
             <!-- Pillar 3 -->
             <div class="service-card">
                 <span class="service-tag">PILLAR_03 // AI ARCHITECTURE</span>
@@ -1053,8 +860,6 @@
             </div>
         </div>
     </section>
-
-
     <!-- 3. Studio Background & Pedagogy (#about) -->
     <section id="about" class="section-divider">
         <div class="about-grid">
@@ -1064,8 +869,6 @@
                 <p><strong>PASTEL</strong> (<em>Pragmatic Applied Systems &amp; Training Engineering Lab</em>) operates at the intersection of cognitive science, communicative task design, and modern frontend development. Founded by an instructional engineer and educator holding an <strong>M.S.Ed. in Applied Linguistics / TESOL</strong>, the lab applies over a decade of curriculum architecture to technical and enterprise domains.</p>
                 <p>Mastering a complex SaaS platform or regulatory framework mirrors acquiring a specialized language: passive exposure fails, while scaffolded, task-based interaction builds durable fluency. By combining empirical second-language acquisition principles—such as input simplification, noticing, and iterative output—with clean web-native engineering, PASTEL builds applied systems training that respects user cognition and drives measurable operational fluency.</p>
             </div>
-
-
             <aside class="credentials-panel">
                 <h3>Pedagogical &amp; Technical Stack</h3>
                 <div class="credential-item">
@@ -1086,8 +889,6 @@
             </aside>
         </div>
     </section>
-
-
     <!-- 4. Inquiries & Project Initiation (#contact) -->
     <section id="contact" class="section-divider">
         <header>
@@ -1095,10 +896,8 @@
             <h2>Start a Conversation</h2>
             <p>Scoping a custom simulation, overhauling technical workflow onboarding, or recruiting for a senior instructional engineering role? Send the details below.</p>
         </header>
-
-
         <div class="contact-container">
-            <form action="#" method="POST">
+            <form action="https://formspree.io/f/mgakvnbe" method="POST">
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="name">Full Name</label>
@@ -1109,8 +908,6 @@
                         <input type="email" id="email" name="email" class="form-control" placeholder="alex@company.com" required>
                     </div>
                 </div>
-
-
                 <div class="form-group">
                     <label for="scope">Project Scope / Inquiry Type</label>
                     <select id="scope" name="scope" class="form-control" required>
@@ -1121,14 +918,10 @@
                         <option value="full-time-role">Full-Time Instructional Design / LXD Opportunity</option>
                     </select>
                 </div>
-
-
                 <div class="form-group">
                     <label for="message">Project Context &amp; Objectives</label>
                     <textarea id="message" name="message" class="form-control" placeholder="Briefly describe your target learners, technical workflow, or timeline..." required></textarea>
                 </div>
-
-
                 <div class="form-footer">
                     <span class="form-note">// Response SLA: &lt; 24 business hours</span>
                     <button type="submit" class="btn-primary">Transmit Inquiry</button>
@@ -1136,8 +929,6 @@
             </form>
         </div>
     </section>
-
-
     <!-- Footer -->
     <footer>
         <div class="footer-inner">
@@ -1148,7 +939,7 @@
             </div>
         </div>
     </footer>
-
-
 </body>
 </html>
+
+```
