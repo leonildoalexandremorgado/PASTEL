@@ -406,6 +406,9 @@
         }
 
         function renderStep(step) {
+            // Smoothly scroll back to the top of the workspace when changing steps
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
             updateStepper(step);
             const panel = document.getElementById('instruction-panel');
             const terminal = document.getElementById('terminal-output');
