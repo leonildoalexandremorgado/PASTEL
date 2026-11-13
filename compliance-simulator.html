@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PASTEL Lab // Compliance Risk Assessment Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-offwhite: #F8FAFC;
+            --surface-white: #FFFFFF;
+            --text-slate: #0F172A;
+            --text-muted: #475569;
+            --border-subtle: #E2E8F0;
+            --accent-cobalt: #2563EB;
+            --accent-cobalt-hover: #1D4ED8;
+            --accent-emerald: #059669;
+            --accent-emerald-bg: #ECFDF5;
+            --accent-amber: #D97706;
+            --accent-amber-bg: #FFFBEB;
+            --accent-red: #DC2626;
+            --accent-red-bg: #FEF2F2;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg-offwhite);
+            color: var(--text-slate);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        /* Top Lab Bar */
+        header.lab-nav {
+            background: var(--surface-white);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.9rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .back-link {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+        .back-link:hover { color: var(--accent-cobalt); }
+        .badge-mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            background: #EFF6FF;
+            color: var(--accent-cobalt);
+            border: 1px solid #DBEAFE;
+            font-weight: 600;
+        }
+
+        /* Main Workspace */
+        main.workspace {
+            max-width: 1140px;
+            width: 100%;
+            margin: 2.5rem auto;
+            padding: 0 5%;
+            flex-grow: 1;
+        }
+        .module-header {
+            margin-bottom: 1.75rem;
+        }
+        .module-header h1 {
+            font-size: 1.85rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            margin-bottom: 0.4rem;
+        }
+        .module-header p {
+            color: var(--text-muted);
+            font-size: 0.98rem;
+        }
+
+        /* Case Queue Stepper */
+        .queue-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .queue-item {
+            background: var(--surface-white);
+            border: 1px solid var(--border-subtle);
+            padding: 0.85rem 1rem;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            opacity: 0.65;
+            transition: all 0.2s ease;
+        }
+        .queue-item.active {
+            opacity: 1;
+            border-color: var(--accent-cobalt);
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.08);
+        }
+        .queue-item.completed {
+            opacity: 1;
+            border-color: var(--accent-emerald);
+            background: var(--accent-emerald-bg);
+        }
+        .queue-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+        .queue-status {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            background: var(--bg-offwhite);
+            border: 1px solid var(--border-subtle);
+        }
+        .queue-item.completed .queue-status {
+            background: var(--accent-emerald);
+            color: white;
+            border-color: var(--accent-emerald);
+        }
+
+        /* Split Workspace Grid */
+        .compliance-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+        .panel {
+            background: var(--surface-white);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+        }
+        .panel-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 0.85rem;
+            margin-bottom: 1.25rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .panel-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-slate);
+            text-transform: uppercase;
+        }
+        .risk-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            padding: 0.2rem 0.55rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .risk-low { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
+        .risk-med { background: #FFFBEB; color: #92400E; border: 1px solid #FDE68A; }
+        .risk-high { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
+
+        /* Dossier List */
+        .dossier-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            margin-bottom: 1.25rem;
+            font-size: 0.9rem;
+        }
+        .dossier-row {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px dashed var(--border-subtle);
+        }
+        .dossier-label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .dossier-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            color: var(--text-slate);
+            text-align: right;
+        }
+
+        /* Regulatory Scaffold Box */
+        .scaffold-box {
+            background: #EFF6FF;
+            border: 1px solid #DBEAFE;
+            border-radius: 8px;
+            padding: 0.95rem 1rem;
+            font-size: 0.85rem;
+            color: var(--text-slate);
+        }
+        .scaffold-box strong {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.74rem;
+            color: var(--accent-cobalt);
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+        }
+
+        /* Decision Controls */
+        .decision-header {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .decision-sub {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1.25rem;
+        }
+        .option-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+            text-align: left;
+            background: var(--bg-offwhite);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 0.9rem 1rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+        .option-btn:hover {
+            border-color: var(--accent-cobalt);
+            background: var(--surface-white);
+            box-shadow: 0 2px 5px rgba(37, 99, 235, 0.08);
+        }
+        .option-title {
+            font-weight: 600;
+            font-size: 0.92rem;
+            color: var(--text-slate);
+            margin-bottom: 0.15rem;
+        }
+        .option-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Feedback Box */
+        .feedback-box {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            display: none;
+        }
+        .feedback-box.error {
+            display: block;
+            background: var(--accent-red-bg);
+            border: 1px solid #FECACA;
+            color: #991B1B;
+        }
+        .feedback-box.success {
+            display: block;
+            background: var(--accent-emerald-bg);
+            border: 1px solid #A7F3D0;
+            color: #065F46;
+        }
+        .btn-next {
+            margin-top: 0.85rem;
+            background: var(--accent-cobalt);
+            color: white;
+            border: none;
+            padding: 0.65rem 1.15rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .btn-next:hover { background: var(--accent-cobalt-hover); }
+
+        /* xAPI Drawer */
+        .xapi-drawer {
+            max-width: 1140px;
+            width: 100%;
+            margin: 0 auto 2.5rem auto;
+            padding: 0 5%;
+        }
+        .xapi-box {
+            background: var(--surface-white);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 1.25rem;
+        }
+        .xapi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+        }
+        .xapi-feed {
+            background: var(--bg-offwhite);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            padding: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            max-height: 130px;
+            overflow-y: auto;
+            color: var(--text-muted);
+        }
+        .xapi-entry {
+            padding: 0.25rem 0;
+            border-bottom: 1px dashed var(--border-subtle);
+        }
+        .xapi-entry:last-child { border-bottom: none; }
+
+        @media (max-width: 880px) {
+            .compliance-grid, .queue-bar { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="lab-nav">
+        <a href="index.html#portfolio" class="back-link">&larr; Back to PASTEL Studio</a>
+        <span class="badge-mono">MOD_03 // RISK &amp; AML ASSESSMENT</span>
+    </header>
+
+    <main class="workspace">
+        <div class="module-header">
+            <h1>KYB / AML Compliance Decision Simulator</h1>
+            <p>Branching risk scenario engine: Evaluate corporate entity dossiers, beneficial ownership transparency, and transaction velocity against international AML standards.</p>
+        </div>
+
+        <!-- Case Queue -->
+        <div class="queue-bar">
+            <div class="queue-item active" id="q-1">
+                <span class="queue-id">CASE-101</span>
+                <span class="queue-status" id="qs-1">IN REVIEW</span>
+            </div>
+            <div class="queue-item" id="q-2">
+                <span class="queue-id">CASE-104</span>
+                <span class="queue-status" id="qs-2">QUEUED</span>
+            </div>
+            <div class="queue-item" id="q-3">
+                <span class="queue-id">CASE-109</span>
+                <span class="queue-status" id="qs-3">QUEUED</span>
+            </div>
+        </div>
+
+        <!-- Split Workspace -->
+        <div class="compliance-grid">
+            <!-- Left: Entity Dossier -->
+            <div class="panel" id="dossier-panel">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- Right: Decision Gateway -->
+            <div class="panel" id="action-panel">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Live xAPI Telemetry -->
+    <section class="xapi-drawer" aria-label="Live xAPI Telemetry">
+        <div class="xapi-box">
+            <div class="xapi-header">
+                <span style="font-weight: 600; color: var(--text-slate);">// LIVE xAPI TELEMETRY STREAM (AML COMPETENCY LOG)</span>
+                <span style="color: var(--accent-emerald);">● LRS CONNECTED</span>
+            </div>
+            <div class="xapi-feed" id="xapi-feed"></div>
+        </div>
+    </section>
+
+    <script>
+        const cases = [
+            {
+                id: "CASE-101",
+                entity: "Nordic SaaS Solutions ApS",
+                jurisdiction: "Copenhagen, Denmark (FATF Low Risk)",
+                ownership: "100% transparent (Verified Registry)",
+                volume: "$45,000 / mo recurring B2B software",
+                pep: "None detected across UBO registry",
+                riskLevel: "LOW RISK",
+                riskClass: "risk-low",
+                correctAction: "approve",
+                rationale: "Correct. Standard KYB verification confirms a clean, low-risk Nordic tech entity with fully transparent UBOs and normal SaaS transaction velocity.",
+                wrongFeedback: {
+                    edd: "Over-escalation: Forcing Enhanced Due Diligence on a verified low-risk domestic SaaS entity causes unnecessary customer friction.",
+                    block: "False positive: Blocking a clean domestic tech client damages conversion metrics without regulatory justification."
+                }
+            },
+            {
+                id: "CASE-104",
+                entity: "Apex Global Holdings Ltd.",
+                jurisdiction: "BVI / Anonymous Offshore Trust",
+                ownership: "Obscured via bearer shares & nominee directors",
+                volume: "$850,000 cross-border wire burst",
+                pep: "Family member is a regional transit minister",
+                riskLevel: "HIGH RISK // PEP & UBO FLAG",
+                riskClass: "risk-high",
+                correctAction: "edd",
+                rationale: "Spot on! Obscured offshore ownership combined with Politically Exposed Person (PEP) linkage mandates immediate Enhanced Due Diligence (EDD) & Source of Wealth (SoW) verification.",
+                wrongFeedback: {
+                    approve: "Critical compliance failure: Onboarding an opaque offshore entity with PEP exposure without UBO proof violates FATF Recommendation 24.",
+                    block: "Premature action: High-risk entities are first routed to EDD analysts for Source of Wealth dossiers before an outright SAR block."
+                }
+            },
+            {
+                id: "CASE-109",
+                entity: "Valletta Digital Assets SARL",
+                jurisdiction: "Valletta, Malta",
+                ownership: "Listed shell directors with mismatched IP logs",
+                volume: "$3.2M crypto-to-fiat layering velocity",
+                pep: "None",
+                riskLevel: "CRITICAL // SANCTION EVASION PATTERN",
+                riskClass: "risk-high",
+                correctAction: "block",
+                rationale: "Compliance mastery! The mismatch of IP metadata, shell directors, and rapid crypto layering exhibits textbook sanctions evasion and illicit structuring. Immediate SAR filing and account freezing required.",
+                wrongFeedback: {
+                    approve: "Regulatory violation: Approving high-velocity layering with mismatched metadata exposes the institution to severe criminal liability.",
+                    edd: "Inadequate control: Active layering and sanctions evasion indicators require an immediate operational freeze and SAR filing, not standard EDD."
+                }
+            }
+        ];
+
+        let currentIndex = 0;
+        const xapiFeed = document.getElementById('xapi-feed');
+
+        function logXAPI(verb, target, detail = "") {
+            const time = new Date().toISOString().split('T')[1].slice(0, 8);
+            const div = document.createElement('div');
+            div.className = 'xapi-entry';
+            div.innerHTML = `<span style="color:#2563EB">[${time}]</span> Analyst <strong>${verb}</strong> <em>${target}</em> ${detail ? `— <span style="color:#059669">${detail}</span>` : ''}`;
+            xapiFeed.prepend(div);
+        }
+
+        function updateQueueUI() {
+            for (let i = 0; i < cases.length; i++) {
+                const card = document.getElementById(`q-${i + 1}`);
+                const badge = document.getElementById(`qs-${i + 1}`);
+                card.classList.remove('active', 'completed');
+                if (i < currentIndex) {
+                    card.classList.add('completed');
+                    badge.textContent = "RESOLVED";
+                } else if (i === currentIndex) {
+                    card.classList.add('active');
+                    badge.textContent = "IN REVIEW";
+                } else {
+                    badge.textContent = "QUEUED";
+                }
+            }
+        }
+
+        function renderCase(idx) {
+            updateQueueUI();
+            const c = cases[idx];
+
+            document.getElementById('dossier-panel').innerHTML = `
+                <div class="panel-topbar">
+                    <span class="panel-title">Entity Dossier // ${c.id}</span>
+                    <span class="risk-badge ${c.riskClass}">${c.riskLevel}</span>
+                </div>
+                <div class="dossier-grid">
+                    <div class="dossier-row">
+                        <span class="dossier-label">Corporate Entity</span>
+                        <span class="dossier-value">${c.entity}</span>
+                    </div>
+                    <div class="dossier-row">
+                        <span class="dossier-label">Domicile / Jurisdiction</span>
+                        <span class="dossier-value">${c.jurisdiction}</span>
+                    </div>
+                    <div class="dossier-row">
+                        <span class="dossier-label">Ownership Structure</span>
+                        <span class="dossier-value">${c.ownership}</span>
+                    </div>
+                    <div class="dossier-row">
+                        <span class="dossier-label">Projected Volume</span>
+                        <span class="dossier-value">${c.volume}</span>
+                    </div>
+                    <div class="dossier-row">
+                        <span class="dossier-label">PEP Screening</span>
+                        <span class="dossier-value">${c.pep}</span>
+                    </div>
+                </div>
+                <div class="scaffold-box">
+                    <strong>Regulatory Framework // FATF Guidance</strong>
+                    <p style="color: var(--text-muted); font-size: 0.82rem; margin-top: 0.2rem;">Match entity risk markers against proportional Know Your Business (KYB) and anti-money laundering thresholds.</p>
+                </div>
+            `;
+
+            document.getElementById('action-panel').innerHTML = `
+                <div class="panel-topbar">
+                    <span class="panel-title">Compliance Decision Gateway</span>
+                    <span class="risk-badge" style="background:#F1F5F9; color:var(--text-slate);">Case ${idx + 1} of ${cases.length}</span>
+                </div>
+                <div class="decision-header">Select Risk Disposition</div>
+                <p class="decision-sub">Determine the appropriate regulatory onboarding workflow.</p>
+
+                <button class="option-btn" onclick="evaluateDecision('approve')">
+                    <span class="option-title">1. Fast-Track KYB Approval</span>
+                    <span class="option-desc">Entity meets baseline domestic compliance standards. Clear for onboarding.</span>
+                </button>
+
+                <button class="option-btn" onclick="evaluateDecision('edd')">
+                    <span class="option-title">2. Request Enhanced Due Diligence (EDD)</span>
+                    <span class="option-desc">Requires UBO certificates, Source of Wealth (SoW), and direct compliance review.</span>
+                </button>
+
+                <button class="option-btn" onclick="evaluateDecision('block')">
+                    <span class="option-title">3. Block Account &amp; File SAR</span>
+                    <span class="option-desc">High-risk illicit activity markers detected. Freeze funds and report to FIU.</span>
+                </button>
+
+                <div id="feedback" class="feedback-box"></div>
+            `;
+        }
+
+        function evaluateDecision(choice) {
+            const c = cases[currentIndex];
+            const fb = document.getElementById('feedback');
+
+            if (choice === c.correctAction) {
+                fb.className = 'feedback-box success';
+                const isLast = currentIndex === cases.length - 1;
+                fb.innerHTML = `
+                    <strong>✓ Correct Disposition:</strong> ${c.rationale}
+                    <br>
+                    ${!isLast 
+                        ? `<button class="btn-next" onclick="nextCase()">Next Compliance Case &rarr;</button>` 
+                        : `<div style="margin-top:0.75rem; font-weight:600;">🎉 Simulation Complete! All 3 AML risk evaluation scenarios successfully mastered.</div>`
+                    }
+                `;
+                logXAPI('resolved', c.id, `Disposition: ${choice.toUpperCase()}`);
+                
+                // Smoothly scroll back to the top of the workspace upon success
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                if (isLast) {
+                    document.getElementById('q-3').classList.remove('active');
+                    document.getElementById('q-3').classList.add('completed');
+                    document.getElementById('qs-3').textContent = "RESOLVED";
+                    logXAPI('mastered', 'Compliance Risk Assessment Simulator', '100% Analytical Accuracy');
+                }
+            } else {
+                fb.className = 'feedback-box error';
+                fb.innerHTML = `<strong>✕ Compliance Exception:</strong> ${c.wrongFeedback[choice]}`;
+                logXAPI('flagged', c.id, `Incorrect Disposition (${choice})`);
+            }
+        }
+
+        function nextCase() {
+            currentIndex++;
+            renderCase(currentIndex);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Init
+        logXAPI('initialized', 'Compliance Risk Assessment Simulator');
+        renderCase(0);
+    </script>
+</body>
+</html>
