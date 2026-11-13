@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PASTEL Lab // Enterprise Invoice Workflow Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-offwhite: #F8FAFC;
+            --surface-white: #FFFFFF;
+            --text-slate: #0F172A;
+            --text-muted: #475569;
+            --border-subtle: #E2E8F0;
+            --accent-cobalt: #2563EB;
+            --accent-cobalt-hover: #1D4ED8;
+            --accent-emerald: #059669;
+            --accent-emerald-bg: #ECFDF5;
+            --accent-amber: #D97706;
+            --accent-amber-bg: #FFFBEB;
+            --accent-red: #DC2626;
+            --accent-red-bg: #FEF2F2;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg-offwhite);
+            color: var(--text-slate);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        /* Top Lab Bar */
+        header.lab-nav {
+            background: var(--surface-white);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.9rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .back-link {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+        .back-link:hover { color: var(--accent-cobalt); }
+        .badge-mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            background: #EFF6FF;
+            color: var(--accent-cobalt);
+            border: 1px solid #DBEAFE;
+            font-weight: 600;
+        }
+
+        /* Main Workspace */
+        main.workspace {
+            max-width: 1140px;
+            width: 100%;
+            margin: 2.5rem auto;
+            padding: 0 5%;
+            flex-grow: 1;
+        }
+        .module-header {
+            margin-bottom: 1.75rem;
+        }
+        .module-header h1 {
+            font-size: 1.85rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            margin-bottom: 0.4rem;
+        }
+        .module-header p {
+            color: var(--text-muted);
+            font-size: 0.98rem;
+        }
+
+        /* Queue Stepper */
+        .queue-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .queue-item {
+            background: var(--surface-white);
+            border: 1px solid var(--border-subtle);
+            padding: 0.85rem 1rem;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            opacity: 0.65;
+            transition: all 0.2s ease;
+        }
+        .queue-item.active {
+            opacity: 1;
+            border-color: var(--accent-cobalt);
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.08);
+        }
+        .queue-item.completed {
+            opacity: 1;
+            border-color: var(--accent-emerald);
+            background: var(--accent-emerald-bg);
+        }
+        .queue-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+        .queue-status {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            background: var(--bg-offwhite);
+            border: 1px solid var(--border-subtle);
+        }
+        .queue-item.completed .queue-status {
+            background: var(--accent-emerald);
+            color: white;
+            border-color: var(--accent-emerald);
+        }
+
+        /* Split ERP Workspace */
+        .erp-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+        .panel {
+            background: var(--surface-white);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+        }
+        .panel-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 0.85rem;
+            margin-bottom: 1.25rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .panel-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-slate);
+            text-transform: uppercase;
+        }
+        .policy-pill {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            background: #F1F5F9;
+            color: var(--text-muted);
+            padding: 0.2rem 0.55rem;
+            border-radius: 4px;
+        }
+
+        /* 3-Way Match Comparison Table */
+        .match-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            margin-bottom: 1.25rem;
+        }
+        .match-table th {
+            text-align: left;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            padding: 0.6rem 0.75rem;
+            background: var(--bg-offwhite);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .match-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-subtle);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+        }
+        .match-table tr:last-child td { border-bottom: none; }
+        .row-label {
+            font-family: 'Inter', sans-serif !important;
+            font-weight: 600;
+            color: var(--text-slate);
+        }
+        .highlight-warn {
+            color: var(--accent-amber);
+            font-weight: 600;
+        }
+        .highlight-err {
+            color: var(--accent-red);
+            font-weight: 600;
+        }
+        .highlight-ok {
+            color: var(--accent-emerald);
+            font-weight: 600;
+        }
+
+        /* Cognitive Scaffold / Policy Reference Box */
+        .scaffold-box {
+            background: #EFF6FF;
+            border: 1px solid #DBEAFE;
+            border-radius: 8px;
+            padding: 0.95rem 1rem;
+            font-size: 0.85rem;
+            color: var(--text-slate);
+        }
+        .scaffold-box strong {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.74rem;
+            color: var(--accent-cobalt);
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+        }
+        .scaffold-list {
+            margin-left: 1.1rem;
+            color: var(--text-muted);
+            font-size: 0.83rem;
+        }
+
+        /* Decision Controls */
+        .decision-header {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .decision-sub {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1.25rem;
+        }
+        .option-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+            text-align: left;
+            background: var(--bg-offwhite);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 0.9rem 1rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+        .option-btn:hover {
+            border-color: var(--accent-cobalt);
+            background: var(--surface-white);
+            box-shadow: 0 2px 5px rgba(37, 99, 235, 0.08);
+        }
+        .option-title {
+            font-weight: 600;
+            font-size: 0.92rem;
+            color: var(--text-slate);
+            margin-bottom: 0.15rem;
+        }
+        .option-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Feedback Box */
+        .feedback-box {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            display: none;
+        }
+        .feedback-box.error {
+            display: block;
+            background: var(--accent-red-bg);
+            border: 1px solid #FECACA;
+            color: #991B1B;
+        }
+        .feedback-box.success {
+            display: block;
+            background: var(--accent-emerald-bg);
+            border: 1px solid #A7F3D0;
+            color: #065F46;
+        }
+        .btn-next {
+            margin-top: 0.85rem;
+            background: var(--accent-cobalt);
+            color: white;
+            border: none;
+            padding: 0.65rem 1.15rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .btn-next:hover { background: var(--accent-cobalt-hover); }
+
+        /* xAPI Drawer */
+        .xapi-drawer {
+            max-width: 1140px;
+            width: 100%;
+            margin: 0 auto 2.5rem auto;
+            padding: 0 5%;
+        }
+        .xapi-box {
+            background: var(--surface-white);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 1.25rem;
+        }
+        .xapi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+        }
+        .xapi-feed {
+            background: var(--bg-offwhite);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            padding: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            max-height: 130px;
+            overflow-y: auto;
+            color: var(--text-muted);
+        }
+        .xapi-entry {
+            padding: 0.25rem 0;
+            border-bottom: 1px dashed var(--border-subtle);
+        }
+        .xapi-entry:last-child { border-bottom: none; }
+
+        @media (max-width: 880px) {
+            .erp-grid, .queue-bar { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="lab-nav">
+        <a href="index.html#portfolio" class="back-link">&larr; Back to PASTEL Studio</a>
+        <span class="badge-mono">MOD_01 // FINOPS RECONCILIATION</span>
+    </header>
+
+    <main class="workspace">
+        <div class="module-header">
+            <h1>Enterprise Invoice 3-Way Match Simulator</h1>
+            <p>Chunked ERP reconciliation sandbox: Audit vendor invoices against Purchase Orders (PO) and Warehouse Receipts using embedded tolerance guardrails.</p>
+        </div>
+
+        <!-- Audit Queue -->
+        <div class="queue-bar">
+            <div class="queue-item active" id="q-1">
+                <span class="queue-id">INV-2026-884</span>
+                <span class="queue-status" id="qs-1">IN REVIEW</span>
+            </div>
+            <div class="queue-item" id="q-2">
+                <span class="queue-id">INV-2026-889</span>
+                <span class="queue-status" id="qs-2">QUEUED</span>
+            </div>
+            <div class="queue-item" id="q-3">
+                <span class="queue-id">INV-2026-892</span>
+                <span class="queue-status" id="qs-3">QUEUED</span>
+            </div>
+        </div>
+
+        <!-- Split Workspace -->
+        <div class="erp-grid">
+            <!-- Left: Co-Located 3-Way Match Ledger -->
+            <div class="panel" id="ledger-panel">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- Right: Scaffolded Audit Action Panel -->
+            <div class="panel" id="action-panel">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Live xAPI Telemetry -->
+    <section class="xapi-drawer" aria-label="Live xAPI Telemetry">
+        <div class="xapi-box">
+            <div class="xapi-header">
+                <span style="font-weight: 600; color: var(--text-slate);">// LIVE xAPI TELEMETRY STREAM (FINOPS COMPETENCY LOG)</span>
+                <span style="color: var(--accent-emerald);">● LRS CONNECTED</span>
+            </div>
+            <div class="xapi-feed" id="xapi-feed"></div>
+        </div>
+    </section>
+
+    <script>
+        const scenarios = [
+            {
+                id: "INV-2026-884",
+                vendor: "CloudCore Infrastructure Ltd.",
+                currency: "USD",
+                poQty: "50 Nodes",
+                recQty: "50 Nodes",
+                invQty: "50 Nodes",
+                poTotal: "$10,000.00",
+                invTotal: "$10,035.00",
+                variance: "+0.35%",
+                varianceClass: "highlight-ok",
+                correctAction: "approve",
+                rationale: "Correct. The +0.35% FX/fee variance falls strictly within the ≤ 0.50% auto-approval tolerance threshold, and received quantities match 100%.",
+                wrongFeedback: {
+                    hold_fx: "Over-escalation: Variances at or below 0.50% are pre-authorized under FinOps Policy §4.2 to prevent payment bottlenecks.",
+                    reject_qty: "Check the Goods Receipt column: all 50 nodes were confirmed received by warehouse operations."
+                }
+            },
+            {
+                id: "INV-2026-889",
+                vendor: "Kyoto Precision Sensors KK",
+                currency: "JPY → USD",
+                poQty: "200 Units",
+                recQty: "200 Units",
+                invQty: "200 Units",
+                poTotal: "$24,000.00",
+                invTotal: "$24,680.00",
+                variance: "+2.83%",
+                varianceClass: "highlight-warn",
+                correctAction: "hold_fx",
+                rationale: "Spot on. A +2.83% price/FX variance breaches the 0.50% automated tolerance ceiling. Routing to Procurement for PO amendment prevents unauthorized ledger leakage.",
+                wrongFeedback: {
+                    approve: "Compliance breach: Approving a +2.83% variance violates the 0.50% hard cap without a signed PO amendment.",
+                    reject_qty: "Quantities match across PO, Receipt, and Invoice (200 units). The discrepancy is strictly unit pricing / FX spread."
+                }
+            },
+            {
+                id: "INV-2026-892",
+                vendor: "Apex Server Logistics",
+                currency: "USD",
+                poQty: "12 Racks",
+                recQty: "8 Racks",
+                invQty: "12 Racks",
+                poTotal: "$36,000.00",
+                invTotal: "$36,000.00",
+                variance: "0.00% (Price)",
+                varianceClass: "highlight-err",
+                correctAction: "reject_qty",
+                rationale: "Audit mastery achieved! Even though the invoice total matches the PO, paying for 12 racks when only 8 were received violates 3-way match controls.",
+                wrongFeedback: {
+                    approve: "Critical control failure: Never disburse funds for unreceived inventory (4 racks are still unverified in receiving).",
+                    hold_fx: "The unit price and total match the PO ($36,000.00). The blocking issue is the 4-unit receiving shortfall."
+                }
+            }
+        ];
+
+        let currentIndex = 0;
+        const xapiFeed = document.getElementById('xapi-feed');
+
+        function logXAPI(verb, target, detail = "") {
+            const time = new Date().toISOString().split('T')[1].slice(0, 8);
+            const div = document.createElement('div');
+            div.className = 'xapi-entry';
+            div.innerHTML = `<span style="color:#2563EB">[${time}]</span> Specialist <strong>${verb}</strong> <em>${target}</em> ${detail ? `— <span style="color:#059669">${detail}</span>` : ''}`;
+            xapiFeed.prepend(div);
+        }
+
+        function updateQueueUI() {
+            for (let i = 0; i < scenarios.length; i++) {
+                const card = document.getElementById(`q-${i + 1}`);
+                const badge = document.getElementById(`qs-${i + 1}`);
+                card.classList.remove('active', 'completed');
+                if (i < currentIndex) {
+                    card.classList.add('completed');
+                    badge.textContent = "VERIFIED";
+                } else if (i === currentIndex) {
+                    card.classList.add('active');
+                    badge.textContent = "IN REVIEW";
+                } else {
+                    badge.textContent = "QUEUED";
+                }
+            }
+        }
+
+        function renderScenario(idx) {
+            updateQueueUI();
+            const s = scenarios[idx];
+
+            document.getElementById('ledger-panel').innerHTML = `
+                <div class="panel-topbar">
+                    <span class="panel-title">3-Way Match Ledger // ${s.id}</span>
+                    <span class="policy-pill">Vendor: ${s.vendor}</span>
+                </div>
+                <table class="match-table">
+                    <thead>
+                        <tr>
+                            <th>Audit Dimension</th>
+                            <th>Purchase Order</th>
+                            <th>Goods Receipt</th>
+                            <th>Vendor Invoice</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="row-label">Delivered Quantity</td>
+                            <td>${s.poQty}</td>
+                            <td>${s.recQty}</td>
+                            <td>${s.invQty}</td>
+                        </tr>
+                        <tr>
+                            <td class="row-label">Settlement Amount</td>
+                            <td>${s.poTotal}</td>
+                            <td>—</td>
+                            <td>${s.invTotal}</td>
+                        </tr>
+                        <tr>
+                            <td class="row-label">Computed Variance</td>
+                            <td colspan="3" class="${s.varianceClass}">${s.variance} (${s.currency})</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="scaffold-box">
+                    <strong>Embedded Job Aid // FinOps Tolerance Rules</strong>
+                    <ul class="scaffold-list">
+                        <li><strong>Rule 1 (Quantity):</strong> Invoice Qty must never exceed Goods Receipt Qty.</li>
+                        <li><strong>Rule 2 (Tolerance):</strong> Price/FX variance ≤ <strong>0.50%</strong> is eligible for auto-approval.</li>
+                        <li><strong>Rule 3 (Escalation):</strong> Variances &gt; <strong>0.50%</strong> require a Procurement Hold.</li>
+                    </ul>
+                </div>
+            `;
+
+            document.getElementById('action-panel').innerHTML = `
+                <div class="panel-topbar">
+                    <span class="panel-title">Audit Disposition</span>
+                    <span class="policy-pill">Case ${idx + 1} of ${scenarios.length}</span>
+                </div>
+                <div class="decision-header">Select Reconciliation Action</div>
+                <p class="decision-sub">Evaluate the 3-way match data on the left against FinOps tolerance rules.</p>
+
+                <button class="option-btn" onclick="evaluateDecision('approve')">
+                    <span class="option-title">1. Approve for ERP Disbursement</span>
+                    <span class="option-desc">3-way match passes within ≤ 0.50% tolerance. Release payment.</span>
+                </button>
+
+                <button class="option-btn" onclick="evaluateDecision('hold_fx')">
+                    <span class="option-title">2. Place on Price / FX Variance Hold</span>
+                    <span class="option-desc">Quantities match, but amount exceeds 0.50% tolerance cap.</span>
+                </button>
+
+                <button class="option-btn" onclick="evaluateDecision('reject_qty')">
+                    <span class="option-title">3. Reject — Receiving Shortfall Discrepancy</span>
+                    <span class="option-desc">Invoice bills for goods not yet confirmed by warehouse receipt.</span>
+                </button>
+
+                <div id="feedback" class="feedback-box"></div>
+            `;
+        }
+
+        function evaluateDecision(choice) {
+            const s = scenarios[currentIndex];
+            const fb = document.getElementById('feedback');
+
+            if (choice === s.correctAction) {
+                fb.className = 'feedback-box success';
+                const isLast = currentIndex === scenarios.length - 1;
+                fb.innerHTML = `
+                    <strong>✓ Verified Disposition:</strong> ${s.rationale}
+                    <br>
+                    ${!isLast 
+                        ? `<button class="btn-next" onclick="nextScenario()">Next Invoice in Queue &rarr;</button>` 
+                        : `<div style="margin-top:0.75rem; font-weight:600;">🎉 Queue Cleared! All 3 ERP audit edge cases resolved with 100% policy compliance.</div>`
+                    }
+                `;
+                logXAPI('verified', s.id, `Disposition: ${choice.toUpperCase()}`);
+                if (isLast) {
+                    document.getElementById('q-3').classList.remove('active');
+                    document.getElementById('q-3').classList.add('completed');
+                    document.getElementById('qs-3').textContent = "VERIFIED";
+                    logXAPI('mastered', 'Enterprise Invoice Workflow Simulator', '100% Audit Accuracy');
+                }
+            } else {
+                fb.className = 'feedback-box error';
+                fb.innerHTML = `<strong>✕ Audit Exception:</strong> ${s.wrongFeedback[choice]}`;
+                logXAPI('flagged', s.id, `Incorrect Disposition (${choice})`);
+            }
+        }
+
+        function nextScenario() {
+            currentIndex++;
+            renderScenario(currentIndex);
+        }
+
+        // Init
+        logXAPI('initialized', 'Enterprise Invoice Workflow Simulator');
+        renderScenario(0);
+    </script>
+</body>
+</html>
