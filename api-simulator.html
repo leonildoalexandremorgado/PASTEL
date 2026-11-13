@@ -228,7 +228,7 @@
         }
         .btn-action:hover { background: var(--accent-cobalt-hover); }
 
-        /* Feedback Box */
+        /* Feedback Box & Next Buttons */
         .feedback-box {
             margin-top: 1.25rem;
             padding: 1rem;
@@ -248,6 +248,19 @@
             border: 1px solid #A7F3D0;
             color: #065F46;
         }
+        .btn-next {
+            margin-top: 0.85rem;
+            background: var(--accent-cobalt);
+            color: white;
+            border: none;
+            padding: 0.65rem 1.15rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .btn-next:hover { background: var(--accent-cobalt-hover); }
 
         /* Terminal / Code Output */
         .terminal-card {
@@ -392,7 +405,13 @@
             const timestamp = new Date().toISOString().split('T')[1].slice(0, 8);
             const entry = document.createElement('div');
             entry.className = 'xapi-entry';
-            entry.innerHTML = `<span style="color:#2563EB">[${timestamp}]</span> Learner <strong>${verb}</strong> <em>"${objectName}"</em> ${result ? `— <span style="color:#059669">${result}</span>` : ''}`; xapiFeed.prepend(entry); }  function updateStepper(step) { for (let i = 1; i <= 3; i++) { const pill = document.getElementById(`pill-${i}`);
+            entry.innerHTML = `<span style="color:#2563EB">[${timestamp}]</span> Learner <strong>${verb}</strong> <em>"${objectName}"</em> ${result ? `— <span style="color:#059669">${result}</span>` : ''}`;
+            xapiFeed.prepend(entry);
+        }
+
+        function updateStepper(step) {
+            for (let i = 1; i <= 3; i++) {
+                const pill = document.getElementById(`pill-${i}`);
                 pill.classList.remove('active', 'completed');
                 if (i < step) pill.classList.add('completed');
                 if (i === step) pill.classList.add('active');
@@ -441,3 +460,142 @@
                     <p>Our webhook listener expects a specific event string when stablecoin funds clear on-chain. Enter <code>settlement.completed</code> below.</p>
                     <div class="control-group">
                         <label for="event-input">"event" Key Value</label>
+                        <input type="text" id="event-input" placeholder="e.g. payment.pending" oninput="previewStep2()">
+                    </div>
+                    <button class="btn-action" onclick="validateStep2()">Validate JSON Schema &rarr;</button>
+                    <div id="feedback" class="feedback-box"></div>
+                `;
+                previewStep2();
+            } 
+            else if (step === 3) {
+                status.textContent = "403 SIGNATURE MISMATCH";
+                status.style.color = "#FBBF24";
+                panel.innerHTML = `
+                    <div class="pedagogy-callout">
+                        <strong>Cognitive Scaffold // Autonomous Transfer</strong>
+                        Full schema active. Verify cryptographic integrity to prevent replay or spoofing attacks.
+                    </div>
+                    <h2>Step 3: Verify HMAC-SHA256 Header</h2>
+                    <p>Before crediting a user's ledger, your server must verify the <code>X-Pastel-Signature</code> header against your webhook secret. Which action is required if signatures do not match?</p>
+                    <div class="control-group">
+                        <label for="hmac-select">Security Policy Action</label>
+                        <select id="hmac-select">
+                            <option value="none">-- Select Security Response --</option>
+                            <option value="retry">Process payment and log a warning</option>
+                            <option value="reject">Immediately abort and return HTTP 401/403</option>
+                        </select>
+                    </div>
+                    <button class="btn-action" onclick="validateStep3()">Complete Simulation &rarr;</button>
+                    <div id="feedback" class="feedback-box"></div>
+                `;
+                terminal.innerHTML = `
+<span class="hl-comment">// Ready for Final Cryptographic Verification</span>
+POST /v2/webhooks HTTP/1.1
+Host: api.pastel-fintech.io
+<span class="hl-key">Authorization:</span> <span class="hl-str">Bearer sk_test_pastel_992</span>
+<span class="hl-key">X-Pastel-Signature:</span> <span class="hl-str">sha256=8f94b2c1e09a...</span>
+
+{
+  <span class="hl-key">"event"</span>: <span class="hl-str">"settlement.completed"</span>,
+  <span class="hl-key">"asset"</span>: <span class="hl-str">"USDC"</span>,
+  <span class="hl-key">"amount"</span>: <span class="hl-num">2500.00</span>
+}`;
+            }
+        }
+
+        function previewStep1() {
+            const val = document.getElementById('auth-select').value;
+            let headerLine = `<span class="hl-comment">// Missing Authorization Header</span>`;
+            if (val === 'basic') headerLine = `<span class="hl-key">Authorization:</span> <span class="hl-str">Basic sk_test_pastel_992</span>`;
+            if (val === 'bearer') headerLine = `<span class="hl-key">Authorization:</span> <span class="hl-str">Bearer sk_test_pastel_992</span>`;
+            if (val === 'plain') headerLine = `<span class="hl-key">API-Key:</span> <span class="hl-str">sk_test_pastel_992</span>`;
+
+            document.getElementById('terminal-output').innerHTML = `
+POST /v2/webhooks HTTP/1.1
+Host: api.pastel-fintech.io
+${headerLine}
+Content-Type: application/json`;
+        }
+
+        function validateStep1() {
+            const val = document.getElementById('auth-select').value;
+            const fb = document.getElementById('feedback');
+            if (val === 'bearer') {
+                fb.className = 'feedback-box success';
+                fb.innerHTML = `
+                    <strong>✓ 200 Authenticated:</strong> Token format verified. Advancing to payload construction...
+                    <br>
+                    <button class="btn-next" onclick="goToStep(2)">Proceed to Step 2 &rarr;</button>
+                `;
+                logXAPI('passed', 'Step 1: Bearer Authentication', 'Score: 100%');
+            } else {
+                fb.className = 'feedback-box error';
+                fb.innerHTML = `<strong>✕ 401 Rejected:</strong> OAuth 2.0 token endpoints require the <code>Bearer</code> scheme prefix.`;
+                logXAPI('attempted', 'Step 1: Bearer Authentication', 'Incorrect Header Scheme');
+            }
+        }
+
+        function previewStep2() {
+            const val = document.getElementById('event-input').value || "???";
+            document.getElementById('terminal-output').innerHTML = `
+POST /v2/webhooks HTTP/1.1
+Host: api.pastel-fintech.io
+<span class="hl-key">Authorization:</span> <span class="hl-str">Bearer sk_test_pastel_992</span>
+
+{
+  <span class="hl-key">"event"</span>: <span class="hl-str">"${val}"</span>,
+  <span class="hl-key">"asset"</span>: <span class="hl-str">"USDC"</span>,
+  <span class="hl-key">"amount"</span>: <span class="hl-num">2500.00</span>
+}`;
+        }
+
+        function validateStep2() {
+            const val = document.getElementById('event-input').value.trim();
+            const fb = document.getElementById('feedback');
+            if (val === 'settlement.completed') {
+                fb.className = 'feedback-box success';
+                fb.innerHTML = `
+                    <strong>✓ Schema Validated:</strong> Event key matches v2 webhook listener specification.
+                    <br>
+                    <button class="btn-next" onclick="goToStep(3)">Proceed to Step 3 &rarr;</button>
+                `;
+                logXAPI('passed', 'Step 2: JSON Event Schema', 'Valid Syntax');
+            } else {
+                fb.className = 'feedback-box error';
+                fb.innerHTML = `<strong>✕ Schema Error:</strong> Expected <code>settlement.completed</code> (check spelling and lowercase).`;
+                logXAPI('attempted', 'Step 2: JSON Event Schema', `Input: "${val}"`);
+            }
+        }
+
+        function validateStep3() {
+            const val = document.getElementById('hmac-select').value;
+            const fb = document.getElementById('feedback');
+            const status = document.getElementById('http-status');
+
+            if (val === 'reject') {
+                status.textContent = "200 OK // WEBHOOK VERIFIED";
+                status.style.color = "#34D399";
+                fb.className = 'feedback-box success';
+                fb.innerHTML = `<strong>✓ Simulation Complete!</strong> You safely authenticated, structured, and cryptographically verified the webhook pipeline. An xAPI completion statement has been logged below.`;
+                document.getElementById('pill-3').classList.remove('active');
+                document.getElementById('pill-3').classList.add('completed');
+                logXAPI('completed', 'Crypto API Onboarding Micro-Learning', 'Mastery Achieved');
+            } else {
+                fb.className = 'feedback-box error';
+                fb.innerHTML = `<strong>✕ Critical Security Vulnerability:</strong> Never credit funds if the HMAC signature fails verification.`;
+                logXAPI('attempted', 'Step 3: HMAC Verification', 'Security Policy Failure');
+            }
+        }
+
+        function goToStep(targetStep) {
+            currentStep = targetStep;
+            renderStep(targetStep);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Initialize
+        logXAPI('initialized', 'Crypto API Onboarding Micro-Learning');
+        renderStep(1);
+    </script>
+</body>
+</html>
