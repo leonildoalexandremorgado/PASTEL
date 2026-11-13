@@ -598,8 +598,11 @@
         }
 
         function nextScenario() {
-            currentIndex++;
-            renderScenario(currentIndex);
+    currentIndex++;
+    renderScenario(currentIndex);
+    
+    // Smoothly scroll back to the top of the workspace
+    window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // Init
