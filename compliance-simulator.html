@@ -549,9 +549,6 @@
                     }
                 `;
                 logXAPI('resolved', c.id, `Disposition: ${choice.toUpperCase()}`);
-                
-                // Smoothly scroll back to the top of the workspace upon success
-                window.scrollTo({ top: 0, behavior: 'smooth' });
 
                 if (isLast) {
                     document.getElementById('q-3').classList.remove('active');
