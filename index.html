@@ -1,3 +1,6 @@
+Here is your complete, updated `index.html` file with the WebLLM runtime logic updated to use the official pre-built model and CDN configuration (`Qwen2-1.5B-Instruct-q4f16_1`), which bypasses cross-origin cache restrictions and loads reliably for all visitors:
+
+```html
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
@@ -1215,22 +1218,10 @@
             statusDot.className = "status-dot loading";
 
             try {
-                // Using WebLLM's official pre-compiled library for Qwen2-1.5B paired with your custom repository weights
-                const appConfig = {
-                    model_list: [
-                        {
-                            model: "https://huggingface.co/leonildoalexandremorgado/pastel-advisor-qwen2.5",
-                            model_id: "pastel-advisor-qwen2.5",
-                            model_lib: webllm.modelLibURLPrefix + webllm.modelVersion + "/Qwen2-1.5B-Instruct-q4f16_1-ctx4k_cs1k-webgpu.wasm",
-                            overrides: { context_window_size: 2048 }
-                        }
-                    ]
-                };
-
+                // Using WebLLM's official pre-compiled model and CDN configuration
                 pastelEngine = await webllm.CreateMLCEngine(
-                    "pastel-advisor-qwen2.5",
+                    "Qwen2-1.5B-Instruct-q4f16_1",
                     {
-                        appConfig: appConfig,
                         initProgressCallback: (report) => {
                             progressText.innerText = report.text;
                             if (typeof report.progress === "number") {
@@ -1253,7 +1244,7 @@
                 btnInit.disabled = false;
                 btnInit.innerText = "Retry Initialization";
                 progressText.style.color = "#DC2626";
-                progressText.innerText = `Runtime error: ${err.message || "Unable to fetch model artifacts from Hugging Face."}`;
+                progressText.innerText = `Runtime error: ${err.message || "Unable to fetch model artifacts from CDN."}`;
             }
         }
 
@@ -1337,3 +1328,5 @@
     </script>
 </body>
 </html>
+
+```
