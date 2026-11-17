@@ -1215,12 +1215,13 @@
             statusDot.className = "status-dot loading";
 
             try {
+                // Using WebLLM's official pre-compiled library for Qwen2-1.5B paired with your custom repository weights
                 const appConfig = {
                     model_list: [
                         {
                             model: "https://huggingface.co/leonildoalexandremorgado/pastel-advisor-qwen2.5",
                             model_id: "pastel-advisor-qwen2.5",
-                            model_lib: webllm.modelLibURLDefault,
+                            model_lib: webllm.modelLibURLPrefix + webllm.modelVersion + "/Qwen2-1.5B-Instruct-q4f16_1-ctx4k_cs1k-webgpu.wasm",
                             overrides: { context_window_size: 2048 }
                         }
                     ]
