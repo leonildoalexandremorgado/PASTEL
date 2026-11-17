@@ -1215,9 +1215,9 @@
             statusDot.className = "status-dot loading";
 
             try {
-                // Using WebLLM's official pre-compiled model and CDN configuration
+                // Using WebLLM's official pre-built model identifier
                 pastelEngine = await webllm.CreateMLCEngine(
-                    "Qwen2-1.5B-Instruct-q4f16_1",
+                    "Qwen2-1.5B-Instruct-q4f16_1-ctx4k_cs1k-webgpu",
                     {
                         initProgressCallback: (report) => {
                             progressText.innerText = report.text;
