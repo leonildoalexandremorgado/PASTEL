@@ -10,6 +10,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- WebLLM Browser Runtime SDK -->
+    <script type="module">
+        import * as webllm from "https://esm.run/@mlc-ai/web-llm";
+        window.webllm = webllm;
+    </script>
     <style>
         :root {
             --bg-offwhite: #F8FAFC;
@@ -102,6 +107,10 @@
         .nav-links a:hover {
             color: var(--accent-cobalt);
         }
+        .nav-links a.nav-highlight {
+            color: var(--accent-cobalt);
+            font-weight: 600;
+        }
         .cta-button {
             background-color: var(--text-slate);
             color: white;
@@ -192,8 +201,12 @@
             font-family: inherit;
             font-size: 0.95rem;
         }
-        .btn-primary:hover {
+        .btn-primary:hover:not(:disabled) {
             background-color: var(--accent-cobalt-hover);
+        }
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
         .btn-secondary {
             background-color: var(--surface-white);
@@ -422,6 +435,185 @@
             color: white;
             border-color: var(--accent-cobalt);
         }
+        /* WebLLM AI Advisor Console */
+        .advisor-console {
+            background: var(--surface-white);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            max-width: 880px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .advisor-topbar {
+            background: var(--bg-offwhite);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+        .advisor-title-group {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-slate);
+        }
+        .status-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #94A3B8;
+        }
+        .status-dot.online {
+            background: var(--accent-emerald);
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
+        }
+        .status-dot.loading {
+            background: var(--accent-cobalt);
+            animation: pulse 1.5s infinite;
+        }
+        .status-dot.error {
+            background: #EF4444;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        .advisor-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            background: var(--surface-white);
+            border: 1px solid var(--border-subtle);
+            padding: 0.25rem 0.65rem;
+            border-radius: 4px;
+        }
+        .advisor-init-panel {
+            padding: 3rem 2rem;
+            text-align: center;
+            background: var(--surface-white);
+        }
+        .advisor-init-panel p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            max-width: 560px;
+            margin: 0 auto 1.5rem auto;
+        }
+        .progress-container {
+            max-width: 480px;
+            margin: 1.25rem auto 0 auto;
+            display: none;
+        }
+        .progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-offwhite);
+            border: 1px solid var(--border-subtle);
+            border-radius: 999px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent-cobalt);
+            transition: width 0.2s ease;
+        }
+        .progress-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .advisor-chat-window {
+            display: none;
+            flex-direction: column;
+            height: 380px;
+            overflow-y: auto;
+            padding: 1.5rem;
+            gap: 1rem;
+            background: var(--bg-offwhite);
+        }
+        .chat-msg {
+            max-width: 82%;
+            padding: 0.9rem 1.15rem;
+            border-radius: 10px;
+            font-size: 0.93rem;
+            line-height: 1.55;
+            white-space: pre-wrap;
+        }
+        .chat-msg.assistant {
+            align-self: flex-start;
+            background: var(--surface-white);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-slate);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+        }
+        .chat-msg.user {
+            align-self: flex-end;
+            background: var(--accent-cobalt);
+            color: #FFFFFF;
+        }
+        .chat-msg-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            display: block;
+            opacity: 0.8;
+        }
+        .advisor-prompts {
+            display: none;
+            padding: 0.75rem 1.5rem;
+            background: var(--surface-white);
+            border-top: 1px solid var(--border-subtle);
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .prompt-chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            background: var(--bg-offwhite);
+            border: 1px solid var(--border-subtle);
+            padding: 0.35rem 0.7rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .prompt-chip:hover {
+            border-color: var(--accent-cobalt);
+            color: var(--accent-cobalt);
+            background: #EFF6FF;
+        }
+        .advisor-input-bar {
+            display: none;
+            padding: 1rem 1.5rem;
+            background: var(--surface-white);
+            border-top: 1px solid var(--border-subtle);
+            gap: 0.75rem;
+        }
+        .advisor-input-bar input {
+            flex: 1;
+            padding: 0.7rem 1rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.93rem;
+            color: var(--text-slate);
+            background: var(--bg-offwhite);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+        }
+        .advisor-input-bar input:focus {
+            outline: none;
+            background: var(--surface-white);
+            border-color: var(--accent-cobalt);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
         /* 2. Services Section */
         .service-card {
             background: var(--surface-white);
@@ -648,6 +840,9 @@
             .contact-container {
                 padding: 1.75rem;
             }
+            .chat-msg {
+                max-width: 92%;
+            }
         }
     </style>
 </head>
@@ -661,6 +856,7 @@
         <ul class="nav-links">
             <li><a href="#philosophy">Philosophy</a></li>
             <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="#advisor" class="nav-highlight">AI Advisor</a></li>
             <li><a href="#services">Services</a></li>
             <li><a href="#about">About</a></li>
         </ul>
@@ -681,7 +877,7 @@
             <p>We architect technical workflow designs, cognitive scaffolding, and applied systems training—transforming dense software environments into intuitive, measurable performance ecosystems.</p>
             <div class="hero-cta-group">
                 <a href="#portfolio" class="btn-primary">Explore Portfolio</a>
-                <a href="#contact" class="btn-secondary">Get in Touch</a>
+                <a href="#advisor" class="btn-secondary">Launch AI Advisor</a>
             </div>
         </div>
         
@@ -812,10 +1008,59 @@
             </article>
         </div>
     </section>
+    <!-- WebLLM In-Browser AI Advisor (#advisor) -->
+    <section id="advisor" class="section-divider">
+        <header>
+            <span class="section-eyebrow">03 // Client-Side Neural Runtime</span>
+            <h2>PASTEL Instructional Engineering Advisor</h2>
+            <p>Consult directly with our fine-tuned <code style="font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; background: #EFF6FF; color: var(--accent-cobalt); padding: 0.15rem 0.45rem; border-radius: 4px; border: 1px solid #DBEAFE;">pastel-advisor-qwen2.5</code> model. Executed 100% locally in your browser via WebGPU—zero server telemetry, zero API keys, complete data privacy.</p>
+        </header>
+        <div class="advisor-console">
+            <div class="advisor-topbar">
+                <div class="advisor-title-group">
+                    <span class="status-dot" id="advisor-dot"></span>
+                    <span>PASTEL_ADVISOR // QWEN2.5-1.5B</span>
+                </div>
+                <span class="advisor-badge" id="advisor-status">IDLE // WEBGPU READY</span>
+            </div>
+
+            <!-- Initialization Panel -->
+            <div class="advisor-init-panel" id="advisor-init">
+                <p>Initialize the fine-tuned model weights directly from Hugging Face into your local browser cache (~1.1 GB on first load) to scope technical training workflows, cognitive scaffolding strategies, or H5P/xAPI architecture.</p>
+                <button id="btn-init-advisor" class="btn-primary" onclick="initPastelAdvisor()">Initialize Advisor Runtime</button>
+                <div class="progress-container" id="advisor-progress">
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="advisor-progress-fill"></div>
+                    </div>
+                    <div class="progress-text" id="advisor-progress-text">Preparing WebGPU environment...</div>
+                </div>
+            </div>
+
+            <!-- Chat Stream -->
+            <div class="advisor-chat-window" id="advisor-chat">
+                <div class="chat-msg assistant">
+                    <span class="chat-msg-label">PASTEL_ADVISOR</span>Welcome to the Pragmatic Applied Systems &amp; Training Engineering Lab. Describe a technical onboarding bottleneck, a legacy SOP manual you want converted into an interactive simulation, or an xAPI/H5P architecture requirement, and I will map out a cognitive scaffolding plan.
+                </div>
+            </div>
+
+            <!-- Quick Diagnostic Prompts -->
+            <div class="advisor-prompts" id="advisor-prompts">
+                <button class="prompt-chip" onclick="useSamplePrompt('How do we convert a 50-page SaaS admin manual into a low-cognitive-load simulation?')">Convert 50-page manual &rarr;</button>
+                <button class="prompt-chip" onclick="useSamplePrompt('Compare H5P vs custom HTML5/xAPI builds for fintech compliance training.')">H5P vs. Custom xAPI &rarr;</button>
+                <button class="prompt-chip" onclick="useSamplePrompt('Outline a Cognitive Task Analysis (CTA) sprint for developer API onboarding.')">CTA for API Onboarding &rarr;</button>
+            </div>
+
+            <!-- Input Bar -->
+            <div class="advisor-input-bar" id="advisor-input-bar">
+                <input type="text" id="advisor-input" placeholder="Ask about Cognitive Task Analysis, HTML5/H5P builds, or technical workflow scaffolding..." onkeydown="if(event.key==='Enter') sendAdvisorMessage()">
+                <button id="btn-send-advisor" class="btn-primary" onclick="sendAdvisorMessage()">Transmit</button>
+            </div>
+        </div>
+    </section>
     <!-- 2. Boutique Studio Offerings (#services) -->
     <section id="services" class="section-divider">
         <header>
-            <span class="section-eyebrow">03 // Studio Capabilities</span>
+            <span class="section-eyebrow">04 // Studio Capabilities</span>
             <h2>Boutique Studio Offerings</h2>
             <p>End-to-end applied systems training and instructional engineering for SaaS teams, fintech startups, and enterprise L&amp;D organizations.</p>
         </header>
@@ -859,7 +1104,7 @@
     <section id="about" class="section-divider">
         <div class="about-grid">
             <div class="about-content">
-                <span class="section-eyebrow">04 // Studio Background &amp; Pedagogy</span>
+                <span class="section-eyebrow">05 // Studio Background &amp; Pedagogy</span>
                 <h2>Why Applied Linguistics is the Ultimate Edge in Instructional Engineering.</h2>
                 <p><strong>PASTEL</strong> (<em>Pragmatic Applied Systems &amp; Training Engineering Lab</em>) is built on a foundational premise: mastering a complex fintech platform or enterprise software ecosystem is structurally identical to acquiring a specialized language. Traditional instructional designers rely on static templates; PASTEL approaches technical training through the lens of psycholinguistics, cognitive load theory, and communicative task design.</p>
                 <p>Backed by an <strong>M.S.Ed. in Applied Linguistics / TESOL</strong> and over a decade of rigorous curriculum architecture, our studio translates intricate system syntax into structured, digestible cognitive schemas. By replacing passive documentation with active task-based interaction, feedback loops, and input simplification, we eliminate friction and engineer learning experiences that drive immediate, measurable operational fluency.</p>
@@ -887,7 +1132,7 @@
     <!-- 4. Inquiries & Project Initiation (#contact) -->
     <section id="contact" class="section-divider">
         <header>
-            <span class="section-eyebrow">05 // Initiate Engagement</span>
+            <span class="section-eyebrow">06 // Initiate Engagement</span>
             <h2>Start a Conversation</h2>
             <p>Scoping a custom simulation, overhauling technical workflow onboarding, or recruiting for a senior instructional engineering role? Send the details below.</p>
         </header>
@@ -934,5 +1179,160 @@
             </div>
         </div>
     </footer>
+
+    <!-- WebLLM Client Runtime Logic -->
+    <script>
+        let pastelEngine = null;
+        let isGenerating = false;
+
+        const PASTEL_SYSTEM_PROMPT = `You are the PASTEL Instructional Engineering Advisor, representing the Pragmatic Applied Systems & Training Engineering Lab. You advise enterprise L&D leaders, SaaS teams, and fintech organizations on Cognitive Load Theory, Task-Based Learning (TBL), Cognitive Task Analysis (CTA), and web-native interactive learning engineering (HTML5, JavaScript, H5P, xAPI). Provide concise, practical, high-signal architectural recommendations that eliminate extraneous cognitive load and replace passive documentation with active sandboxed simulations.`;
+
+        const conversationHistory = [
+            { role: "system", content: PASTEL_SYSTEM_PROMPT }
+        ];
+
+        async function initPastelAdvisor() {
+            const btnInit = document.getElementById("btn-init-advisor");
+            const progressBox = document.getElementById("advisor-progress");
+            const progressFill = document.getElementById("advisor-progress-fill");
+            const progressText = document.getElementById("advisor-progress-text");
+            const statusBadge = document.getElementById("advisor-status");
+            const statusDot = document.getElementById("advisor-dot");
+
+            if (!navigator.gpu) {
+                statusBadge.innerText = "UNSUPPORTED // NO WEBGPU";
+                statusDot.className = "status-dot error";
+                progressBox.style.display = "block";
+                progressText.style.color = "#DC2626";
+                progressText.innerText = "WebGPU is not available in this browser/device. Please open PASTEL on a desktop browser (Chrome, Edge, or Brave) with hardware acceleration enabled.";
+                return;
+            }
+
+            btnInit.disabled = true;
+            btnInit.innerText = "Initializing Runtime...";
+            progressBox.style.display = "block";
+            statusBadge.innerText = "LOADING // CACHING WEIGHTS";
+            statusDot.className = "status-dot loading";
+
+            try {
+                const appConfig = {
+                    model_list: [
+                        {
+                            model: "https://huggingface.co/leonildoalexandremorgado/pastel-advisor-qwen2.5",
+                            model_id: "pastel-advisor-qwen2.5",
+                            model_lib: webllm.modelLibURLDefault,
+                            overrides: { context_window_size: 2048 }
+                        }
+                    ]
+                };
+
+                pastelEngine = await webllm.CreateMLCEngine(
+                    "pastel-advisor-qwen2.5",
+                    {
+                        appConfig: appConfig,
+                        initProgressCallback: (report) => {
+                            progressText.innerText = report.text;
+                            if (typeof report.progress === "number") {
+                                progressFill.style.width = `${Math.round(report.progress * 100)}%`;
+                            }
+                        }
+                    }
+                );
+
+                document.getElementById("advisor-init").style.display = "none";
+                document.getElementById("advisor-chat").style.display = "flex";
+                document.getElementById("advisor-prompts").style.display = "flex";
+                document.getElementById("advisor-input-bar").style.display = "flex";
+                statusBadge.innerText = "ONLINE // WEBGPU ACTIVE";
+                statusDot.className = "status-dot online";
+            } catch (err) {
+                console.error("WebLLM Initialization Error:", err);
+                statusBadge.innerText = "ERROR // LOAD FAILED";
+                statusDot.className = "status-dot error";
+                btnInit.disabled = false;
+                btnInit.innerText = "Retry Initialization";
+                progressText.style.color = "#DC2626";
+                progressText.innerText = `Runtime error: ${err.message || "Unable to fetch model artifacts from Hugging Face."}`;
+            }
+        }
+
+        function useSamplePrompt(text) {
+            const inputField = document.getElementById("advisor-input");
+            inputField.value = text;
+            sendAdvisorMessage();
+        }
+
+        async function sendAdvisorMessage() {
+            if (!pastelEngine || isGenerating) return;
+
+            const inputField = document.getElementById("advisor-input");
+            const sendBtn = document.getElementById("btn-send-advisor");
+            const chatWindow = document.getElementById("advisor-chat");
+            const userPrompt = inputField.value.trim();
+
+            if (!userPrompt) return;
+
+            isGenerating = true;
+            inputField.disabled = true;
+            sendBtn.disabled = true;
+
+            // Append User Message
+            const userBubble = document.createElement("div");
+            userBubble.className = "chat-msg user";
+            userBubble.innerHTML = `<span class="chat-msg-label">CLIENT // INQUIRY</span>${escapeHTML(userPrompt)}`;
+            chatWindow.appendChild(userBubble);
+            inputField.value = "";
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            conversationHistory.push({ role: "user", content: userPrompt });
+
+            // Append Assistant Message Container
+            const aiBubble = document.createElement("div");
+            aiBubble.className = "chat-msg assistant";
+            aiBubble.innerHTML = `<span class="chat-msg-label">PASTEL_ADVISOR</span><span class="ai-stream-target">Synthesizing architectural response...</span>`;
+            chatWindow.appendChild(aiBubble);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            const targetSpan = aiBubble.querySelector(".ai-stream-target");
+
+            try {
+                let fullResponse = "";
+                const chunks = await pastelEngine.chat.completions.create({
+                    messages: conversationHistory,
+                    temperature: 0.4,
+                    max_tokens: 512,
+                    stream: true
+                });
+
+                for await (const chunk of chunks) {
+                    const delta = chunk.choices[0]?.delta?.content || "";
+                    fullResponse += delta;
+                    targetSpan.textContent = fullResponse;
+                    chatWindow.scrollTop = chatWindow.scrollHeight;
+                }
+
+                conversationHistory.push({ role: "assistant", content: fullResponse });
+            } catch (err) {
+                console.error("Inference Error:", err);
+                targetSpan.style.color = "#DC2626";
+                targetSpan.textContent = "Error generating response from local WebGPU runtime.";
+            } finally {
+                isGenerating = false;
+                inputField.disabled = false;
+                sendBtn.disabled = false;
+                inputField.focus();
+            }
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, tag => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;'
+            }[tag] || tag));
+        }
+    </script>
 </body>
 </html>
