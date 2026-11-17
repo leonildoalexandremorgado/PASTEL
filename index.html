@@ -1327,8 +1327,9 @@
                 conversationHistory.push({ role: "assistant", content: fullResponse });
             } catch (err) {
                 console.error("Inference Error:", err);
+                conversationHistory.pop(); // drop the failed user turn so retries don't stack
                 targetSpan.style.color = "#DC2626";
-                targetSpan.textContent = "Error generating response from local WebGPU runtime.";
+                targetSpan.textContent = "Error generating response: " + (err && err.message ? err.message : String(err));
             } finally {
                 isGenerating = false;
                 inputField.disabled = false;
