@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PASTEL // Standard Process and Invoice Case File</title>
+<style>
+:root{--ink:#0F172A;--slate:#334155;--muted:#64748B;--line:#E2E8F0;--bg:#F8FAFC;--card:#fff;--cobalt:#2563EB;--tint:#EFF6FF;--warn:#FEF3C7;--warnline:#FDE68A}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--slate);line-height:1.6}
+main{max-width:900px;margin:0 auto;padding:2rem 1.25rem 4rem}
+a{color:var(--cobalt)}
+.back{display:inline-block;margin-bottom:1.5rem;font-size:.9rem;text-decoration:none}
+h1{color:var(--ink);font-size:2rem;line-height:1.2;margin:.2rem 0 .8rem}
+h2{color:var(--ink);font-size:1.4rem;margin:2.5rem 0 .6rem}
+h3{color:var(--ink);font-size:1.05rem;margin:1.6rem 0 .4rem}
+.eyebrow{font-family:ui-monospace,Consolas,monospace;font-size:.75rem;color:var(--cobalt);font-weight:600;letter-spacing:.04em}
+.note{background:var(--warn);border:1px solid var(--warnline);border-radius:10px;padding:.8rem 1rem;font-size:.92rem;margin:1.2rem 0}
+.step{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1rem 1.2rem;margin:.9rem 0}
+.step h3{margin:0 0 .3rem}.step p{margin:.25rem 0}
+.num{font-family:ui-monospace,Consolas,monospace;color:var(--cobalt);margin-right:.4rem}
+.rule{background:var(--tint);border-radius:8px;padding:.45rem .7rem;margin-top:.5rem;font-size:.92rem}
+.fw{font-size:.85rem;color:var(--muted)}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;font-size:.9rem;margin:.6rem 0}
+th,td{text-align:left;vertical-align:top;padding:.55rem .7rem;border-bottom:1px solid var(--line)}
+th{background:#F1F5F9;color:var(--ink);font-size:.8rem}
+.scroll{overflow-x:auto}
+.btns a{display:inline-block;margin:.3rem .6rem .3rem 0;padding:.5rem .9rem;border-radius:8px;border:1px solid var(--cobalt);text-decoration:none;font-weight:600;font-size:.9rem}
+.btns a.primary{background:var(--cobalt);color:#fff}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="index.html#portfolio">&larr; Back to PASTEL Studio</a>
+<span class="eyebrow">PROCESS // CASE FILE</span>
+<h1>How PASTEL designs training, and one worked example</h1>
+<p>Every PASTEL project follows the same seven steps. The Invoice case file below shows the steps applied to a portfolio module, including what a design review found wrong with version 1 and what changed in version 2.</p>
+<div class="note"><strong>Read this first.</strong> The scenario is fictional and the module uses fictional data. The case file reconstructs the design reasoning behind a portfolio piece, and no real learners or organizations are involved. The evaluation section is a plan, not a set of results.</div>
+
+<p>Case files: <a href="#invoice">Invoice simulator</a> &middot; <a href="#compliance">Compliance simulator</a> &middot; <a href="#api">API onboarding simulator</a></p>
+
+<h2 id="process">The standard process</h2>
+
+<div class="step"><h3><span class="num">01</span>Define the performance problem</h3>
+<p>What should people do differently, and is training the right fix? Compare desired and actual performance, then screen the causes: missing knowledge or skill, poor tools, weak incentives, or process barriers.</p>
+<p class="fw">Frameworks: performance gap analysis (Mager &amp; Pipe), Human Performance Technology, Action Mapping (Cathy Moore).</p>
+<div class="rule"><strong>Decision rule:</strong> if the cause is tools, incentives or process, say so. Don’t build training for it.</div></div>
+
+<div class="step"><h3><span class="num">02</span>Analyze the task</h3>
+<p>Break the job into the decisions people make and the cues they use to make them. Note where experts and novices differ, and where novices are likely to go wrong.</p>
+<p class="fw">Frameworks: Cognitive Task Analysis.</p>
+<div class="rule"><strong>Decision rule:</strong> design practice around decisions, not topics.</div></div>
+
+<div class="step"><h3><span class="num">03</span>Profile the learners</h3>
+<p>Record prior knowledge, work context and available time. Support that helps beginners can slow experts down, so scaffolding has to fade as skill grows.</p>
+<p class="fw">Frameworks: expertise reversal effect (Kalyuga), cognitive load theory.</p>
+<div class="rule"><strong>Decision rule:</strong> state the assumed starting point, then test it with real learners.</div></div>
+
+<div class="step"><h3><span class="num">04</span>Set objectives and assessment first</h3>
+<p>Write observable objectives, then the assessment items that would prove them, before drafting any content.</p>
+<p class="fw">Frameworks: instructional alignment, criterion-referenced assessment (Dick &amp; Carey tradition).</p>
+<div class="rule"><strong>Decision rule:</strong> if an activity doesn’t serve an objective, cut it.</div></div>
+
+<div class="step"><h3><span class="num">05</span>Design practice and scaffolds</h3>
+<p>Reduce wasted mental effort, for example by placing related information together. Use worked examples early and fade them. Keep the practice close to the real task.</p>
+<p class="fw">Frameworks: cognitive load theory (Sweller), split-attention and worked-example effects, Merrill’s First Principles, Gagné’s events of instruction.</p>
+<div class="rule"><strong>Decision rule:</strong> put the information next to where it’s used.</div></div>
+
+<div class="step"><h3><span class="num">06</span>Build, instrument and test early</h3>
+<p>Prototype quickly and run formative evaluation: expert review, one-to-one tryouts, then a small group. Capture event data so later evaluation has something to use.</p>
+<p class="fw">Frameworks: rapid prototyping, formative evaluation, xAPI.</p>
+<div class="rule"><strong>Decision rule:</strong> test with a few real users before polishing anything.</div></div>
+
+<div class="step"><h3><span class="num">07</span>Evaluate at four levels</h3>
+<p>Plan Reaction, Learning, Behavior and Results measures at the start. Levels 3 and 4 need workplace data, so the metric, the baseline and the data owner must be agreed before launch.</p>
+<p class="fw">Frameworks: Kirkpatrick Four Levels, with confirmative follow-up months later.</p>
+<div class="rule"><strong>Decision rule:</strong> name the metric, the baseline and the owner before launch.</div></div>
+
+<h2 id="invoice">Case file: Enterprise Invoice 3-Way Match Simulator</h2>
+<div class="btns"><a class="primary" href="invoice-simulator.html">Launch v2</a><a href="invoice-simulator-v1.html">Open archived v1</a></div>
+
+<h3>1. Performance problem (fictional scenario)</h3>
+<p>An accounts payable team relies on a 60-page ERP manual. New specialists are expected to apply three rules when matching an invoice to its purchase order and goods receipt, but the rules are buried in the manual. <strong>Desired performance:</strong> apply the rules the same way every time. <strong>Non-training causes to check first:</strong> whether the ERP displays variance clearly, and who owns the tolerance policy.</p>
+
+<h3>2. Task analysis</h3>
+<div class="scroll"><table><thead><tr><th>Step</th><th>Decision and cue</th><th>Predicted novice error</th></tr></thead><tbody>
+<tr><td>1. Compare quantities across PO, receipt and invoice</td><td>Does invoice quantity exceed receipt quantity?</td><td>Trusting a matching invoice total and missing a receiving shortfall</td></tr>
+<tr><td>2. Work out the price or FX variance</td><td>Is the absolute variance within 0.50%?</td><td>Misjudging values at or near the limit</td></tr>
+<tr><td>3. Choose a disposition</td><td>Approve, hold for Procurement, or reject</td><td>Over-escalating small variances, or approving above tolerance</td></tr>
+</tbody></table></div>
+<p class="fw">The errors are predicted from the task, not observed in real learners.</p>
+
+<h3>3. Learner profile (assumed)</h3>
+<p>A new accounts payable specialist who knows basic accounting terms, works in an ERP system, and has not yet learned this company’s tolerance policy. These assumptions would be checked in one-to-one tryouts before any wider release.</p>
+
+<h3>4. Objectives and assessment</h3>
+<div class="scroll"><table><thead><tr><th>Objective</th><th>Assessed by (v2 cases)</th></tr></thead><tbody>
+<tr><td>O1. Spot a receiving shortfall even when the totals match</td><td>INV-2026-892, INV-2026-921</td></tr>
+<tr><td>O2. Judge a variance against the 0.50% tolerance, including values at the limit</td><td>INV-2026-884, 889, 901, 907</td></tr>
+<tr><td>O3. Choose the correct disposition and apply the checks in order</td><td>All six cases</td></tr>
+</tbody></table></div>
+
+<h3>5. Design decisions in v1</h3>
+<div class="scroll"><table><thead><tr><th>Decision</th><th>Principle</th><th>How it shows up</th></tr></thead><tbody>
+<tr><td>PO, receipt and invoice shown side by side</td><td>Split-attention effect</td><td>One ledger table, so learners don’t flip between documents</td></tr>
+<tr><td>Rules shown beside the data</td><td>Information at the point of use</td><td>An embedded job aid instead of a manual lookup</td></tr>
+<tr><td>One decision per case</td><td>Chunking</td><td>A queue of short cases</td></tr>
+<tr><td>Specific feedback for each wrong choice</td><td>Corrective feedback</td><td>Each wrong option explains what was missed</td></tr>
+</tbody></table></div>
+
+<h3>6. Build and instrument</h3>
+<p>HTML and JavaScript in a single page, with no server. v1 showed an activity log labeled as an xAPI stream. v2 builds real xAPI-structured statements in the browser and offers them as a JSON download.</p>
+
+<h3>7. Evaluation plan (Kirkpatrick)</h3>
+<div class="scroll"><table><thead><tr><th>Level</th><th>Question</th><th>Instrument</th><th>Data owner</th><th>Suggested timing</th></tr></thead><tbody>
+<tr><td>1 Reaction</td><td>Was it clear and relevant?</td><td>Short rating survey after completion</td><td>Learner</td><td>Immediately</td></tr>
+<tr><td>2 Learning</td><td>Can they apply the rules to unseen cases?</td><td>First-attempt score on a fresh case set, compared before and after</td><td>L&amp;D</td><td>Immediately and after two weeks</td></tr>
+<tr><td>3 Behavior</td><td>Do they apply the rules at work?</td><td>Supervisor checklist on a sample of real dispositions: quantities checked first, tolerance applied correctly</td><td>AP lead</td><td>30 to 60 days</td></tr>
+<tr><td>4 Results</td><td>Did outcomes move?</td><td>Exception error rate, rework and escalation volume, late-payment incidents, each against a baseline set before launch</td><td>Finance operations</td><td>Quarterly</td></tr>
+</tbody></table></div>
+<p class="fw">Because the scenario is fictional there are no baselines, so no results are shown.</p>
+
+<h3>8. Design review: v1 to v2</h3>
+<div class="scroll"><table><thead><tr><th>Issue found in v1</th><th>Why it matters</th><th>Change in v2</th></tr></thead><tbody>
+<tr><td>Answer options described the rule that made them correct</td><td>Learners could match wording instead of applying the rules</td><td>Options describe the action only</td></tr>
+<tr><td>Correct answers always came in the same order</td><td>A pattern could be guessed</td><td>Case order and option order are shuffled</td></tr>
+<tr><td>Three cases, one per rule</td><td>No value at the limit, and no case where two problems compete</td><td>Six cases, including exactly 0.50%, just above it, and a combined shortfall and overage with a stated check order</td></tr>
+<tr><td>“100% Audit Accuracy” logged at the end regardless of wrong attempts</td><td>The record overstated performance</td><td>First-attempt accuracy is scored and reported</td></tr>
+<tr><td>Log labeled “LRS CONNECTED” with nothing sent anywhere</td><td>The label claimed something that wasn’t true</td><td>Labeled as generated locally, with xAPI-structured statements and a JSON download</td></tr>
+<tr><td>Feedback not announced to screen readers</td><td>Learners using assistive technology missed the result</td><td>Feedback is announced through a live region, and smooth scrolling respects reduced-motion settings</td></tr>
+</tbody></table></div>
+<p><strong>Still not done:</strong> v2 has not been tested with real learners, and a full accessibility audit has not been run.</p>
+
+<h2 id="compliance">Case file: KYB / AML Compliance Decision Simulator</h2>
+<div class="note">The policy, the entities and the escalation rules in this module are fictional. Real AML procedures vary by institution and jurisdiction, and this is not compliance training for real use.</div>
+<div class="btns"><a class="primary" href="compliance-simulator.html">Launch v2</a><a href="compliance-simulator-v1.html">Open archived v1</a></div>
+
+<h3>1. Performance problem (fictional scenario)</h3>
+<p>New onboarding analysts at a fictional fintech are expected to match their response to the level of risk in a business customer’s file. <strong>Desired performance:</strong> approve clean files, ask for documents when an item can be explained, and escalate serious indicators without acting alone. <strong>Non-training causes to check first:</strong> whether the escalation policy is written down and findable, and whether the case system shows ownership and activity data together.</p>
+
+<h3>2. Task analysis</h3>
+<div class="scroll"><table><thead><tr><th>Step</th><th>Decision and cue</th><th>Predicted novice error</th></tr></thead><tbody>
+<tr><td>1. Check ownership transparency</td><td>Can the beneficial owner be identified?</td><td>Accepting a registry entry without asking who actually controls the entity</td></tr>
+<tr><td>2. Compare activity with the expected profile</td><td>Does the volume and pattern match?</td><td>Treating any mismatch as wrongdoing, or ignoring it</td></tr>
+<tr><td>3. Screen for PEP exposure</td><td>Is there a match, and is it explained?</td><td>Reacting to any PEP link the same way, or missing opacity combined with a PEP link</td></tr>
+<tr><td>4. Choose a proportionate response</td><td>Approve, request information, monitor, or escalate</td><td>Over-escalating clean files, or acting alone on serious indicators</td></tr>
+<tr><td>5. Decide again when new information arrives</td><td>Do the documents resolve the open items?</td><td>Anchoring on the first impression</td></tr>
+</tbody></table></div>
+<p class="fw">The errors are predicted from the task, not observed in real learners.</p>
+
+<h3>3. Learner profile (assumed)</h3>
+<p>A new onboarding analyst who knows the basic terms (beneficial owner, PEP) but has not yet learned this firm’s escalation policy. These assumptions would be checked in one-to-one tryouts.</p>
+
+<h3>4. Objectives and assessment</h3>
+<div class="scroll"><table><thead><tr><th>Objective</th><th>Assessed by (v2 cases)</th></tr></thead><tbody>
+<tr><td>O1. Tell a clean profile from one with open items</td><td>CASE-101, and the first decision in CASE-112</td></tr>
+<tr><td>O2. Choose a proportionate first response</td><td>The first decision in every case</td></tr>
+<tr><td>O3. Decide again when new information arrives</td><td>The second decision in CASE-104 and CASE-112</td></tr>
+<tr><td>O4. Recognize patterns that call for immediate escalation without contacting the client</td><td>CASE-109</td></tr>
+</tbody></table></div>
+
+<h3>5. Design decisions in v1</h3>
+<div class="scroll"><table><thead><tr><th>Decision</th><th>Principle</th><th>How it shows up</th></tr></thead><tbody>
+<tr><td>Dossier beside the decision panel</td><td>Split-attention effect</td><td>Facts and choices on one screen</td></tr>
+<tr><td>Three tiers of response</td><td>Proportionality as the core concept</td><td>Approve, enhanced due diligence, block</td></tr>
+<tr><td>Short case queue</td><td>Chunking</td><td>One entity at a time</td></tr>
+<tr><td>Feedback that names the consequence</td><td>Corrective feedback</td><td>Each wrong choice explains the risk</td></tr>
+</tbody></table></div>
+
+<h3>6. Build and instrument</h3>
+<p>HTML and JavaScript in a single page. v1 showed an activity log labeled as an xAPI stream. v2 builds xAPI-structured statements for each decision in the browser, with a JSON download. Nothing is sent to a learning record store.</p>
+
+<h3>7. Evaluation plan (Kirkpatrick)</h3>
+<div class="scroll"><table><thead><tr><th>Level</th><th>Question</th><th>Instrument</th><th>Data owner</th><th>Suggested timing</th></tr></thead><tbody>
+<tr><td>1 Reaction</td><td>Was it clear and relevant?</td><td>Short rating survey</td><td>Learner</td><td>Immediately</td></tr>
+<tr><td>2 Learning</td><td>Can they choose a proportionate response on unseen cases?</td><td>First-attempt score across decisions on a fresh case set</td><td>L&amp;D</td><td>Immediately and after two weeks</td></tr>
+<tr><td>3 Behavior</td><td>Do real decisions follow the policy?</td><td>Quality review of a sample of real onboarding decisions: proportionality and timeliness of escalation</td><td>Compliance QA</td><td>30 to 60 days</td></tr>
+<tr><td>4 Results</td><td>Did outcomes move?</td><td>Unnecessary escalations, time to decision, quality-review findings, each against a pre-launch baseline</td><td>Compliance operations</td><td>Quarterly</td></tr>
+</tbody></table></div>
+<p class="fw">Because the scenario is fictional there are no baselines, so no results are shown.</p>
+
+<h3>8. Design review: v1 to v2</h3>
+<div class="scroll"><table><thead><tr><th>Issue found in v1</th><th>Why it matters</th><th>Change in v2</th></tr></thead><tbody>
+<tr><td>Each dossier carried a risk label such as “HIGH RISK” or “CRITICAL”</td><td>Learners could read the label instead of weighing the evidence</td><td>Labels removed; the learner reasons from the facts</td></tr>
+<tr><td>Described as branching, but it was three independent single choices</td><td>The description promised more than the design delivered</td><td>Described accurately; two cases now present a second decision when new information arrives</td></tr>
+<tr><td>Described as decided “under time constraints,” but nothing was timed</td><td>The claim was untrue</td><td>Claim removed. Speed pressure is a later fluency goal, and would add load for novices</td></tr>
+<tr><td>Option text stated the criteria (“illicit activity markers detected”)</td><td>Learners could match wording instead of judging</td><td>Option text describes the action only</td></tr>
+<tr><td>Answers always came in the same order</td><td>A pattern could be guessed</td><td>Case order and option order are shuffled</td></tr>
+<tr><td>“Block account and file SAR” offered as an analyst action</td><td>Analysts normally escalate, and the officer decides on reports and freezes</td><td>Replaced with escalation to the compliance officer. A practitioner should review this rule</td></tr>
+<tr><td>“100% Analytical Accuracy” and “LRS CONNECTED” labels</td><td>The record and the label overstated what happened</td><td>First-attempt scoring and statements labeled as generated locally</td></tr>
+<tr><td>Feedback not announced to screen readers</td><td>Learners using assistive technology missed the result</td><td>Live region, and smooth scrolling respects reduced-motion settings</td></tr>
+</tbody></table></div>
+<p><strong>Still not done:</strong> v2 has not been tested with real learners, a full accessibility audit has not been run, and the policy has not been reviewed by an AML professional.</p>
+
+<h2 id="api">Case file: Crypto Payment Webhook Onboarding</h2>
+<div class="note">The API, keys, secret and signing scheme in this module are fictional. The signing scheme is a simplified teaching version, so real providers differ and nothing here should be copied into production.</div>
+<div class="btns"><a class="primary" href="api-simulator.html">Launch v2</a><a href="api-simulator-v1.html">Open archived v1</a></div>
+
+<h3>1. Performance problem (fictional scenario)</h3>
+<p>A fictional payments company finds that some integrators ship webhook handlers that skip signature checks or accept old requests. <strong>Desired performance:</strong> integrators authenticate correctly, handle the right event types, and verify both the signature and the timestamp before crediting funds. <strong>Non-training causes to check first:</strong> whether the SDK offers a verification helper, whether the documentation buries the signing rules, and whether the sandbox ever sends a bad signature. If the SDK did the check by default, training would matter much less.</p>
+
+<h3>2. Task analysis</h3>
+<div class="scroll"><table><thead><tr><th>Step</th><th>Decision and cue</th><th>Predicted novice error</th></tr></thead><tbody>
+<tr><td>1. Authenticate the request</td><td>Which header and scheme does the reference specify?</td><td>Using a familiar scheme instead of reading the reference</td></tr>
+<tr><td>2. Pick the event type</td><td>What state is the transfer in?</td><td>Confusing pending and completed events</td></tr>
+<tr><td>3. Verify the signature</td><td>Does the expected signature match the received one?</td><td>Skipping the check, or comparing the wrong body</td></tr>
+<tr><td>4. Check the timestamp</td><td>Is the request within 5 minutes of its timestamp?</td><td>Treating a valid signature as proof the request is fresh</td></tr>
+</tbody></table></div>
+<p class="fw">The errors are predicted from the task, not observed in real learners.</p>
+
+<h3>3. Learner profile (assumed)</h3>
+<p>A developer who is comfortable with JSON and HTTP basics but new to this API and to webhook signature verification. These assumptions would be checked in one-to-one tryouts.</p>
+
+<h3>4. Objectives and assessment</h3>
+<div class="scroll"><table><thead><tr><th>Objective</th><th>Assessed by (v2)</th></tr></thead><tbody>
+<tr><td>O1. Build the authentication header the reference specifies</td><td>Step 1</td></tr>
+<tr><td>O2. Choose the event type that matches a scenario</td><td>Step 2</td></tr>
+<tr><td>O3. Detect a body altered after signing</td><td>Step 3, request with the changed amount</td></tr>
+<tr><td>O4. Reject a validly signed but stale request</td><td>Step 3, request that arrives 15 minutes late</td></tr>
+<tr><td>O5. Accept a valid, fresh request without over-rejecting</td><td>Step 3, the valid request</td></tr>
+</tbody></table></div>
+
+<h3>5. Design decisions in v1</h3>
+<div class="scroll"><table><thead><tr><th>Decision</th><th>Principle</th><th>How it shows up</th></tr></thead><tbody>
+<tr><td>Authentication taught before payloads</td><td>Segmenting to limit split attention</td><td>One concept per step</td></tr>
+<tr><td>Live request preview beside the task</td><td>Immediate representation of consequences</td><td>The inspector updates as the learner chooses</td></tr>
+<tr><td>Three steps with shrinking support</td><td>Fading scaffolds</td><td>Labeled worked example, faded prompt, then independent</td></tr>
+<tr><td>HTTP-style feedback</td><td>Authentic context</td><td>Status codes in the inspector</td></tr>
+</tbody></table></div>
+
+<h3>6. Build and instrument</h3>
+<p>HTML and JavaScript in one page. v2 computes real HMAC-SHA256 signatures in the browser using the built-in Web Crypto API, and builds xAPI-structured statements for each decision, with a JSON download. Nothing is sent to a learning record store.</p>
+
+<h3>7. Evaluation plan (Kirkpatrick)</h3>
+<div class="scroll"><table><thead><tr><th>Level</th><th>Question</th><th>Instrument</th><th>Data owner</th><th>Suggested timing</th></tr></thead><tbody>
+<tr><td>1 Reaction</td><td>Was it clear and relevant?</td><td>Short rating survey</td><td>Learner</td><td>Immediately</td></tr>
+<tr><td>2 Learning</td><td>Can they verify a webhook on unseen cases?</td><td>First-attempt score across decisions, with new request variations</td><td>Developer relations</td><td>Immediately and after two weeks</td></tr>
+<tr><td>3 Behavior</td><td>Do their handlers verify signatures and timestamps?</td><td>Review of integrators’ sandbox traffic and code samples against a checklist</td><td>Integration support</td><td>30 to 60 days</td></tr>
+<tr><td>4 Results</td><td>Did outcomes move?</td><td>Rejected-forgery tests passed, integration support tickets, time to first successful integration, each against a pre-launch baseline</td><td>Developer relations</td><td>Quarterly</td></tr>
+</tbody></table></div>
+<p class="fw">Because the scenario is fictional there are no baselines, so no results are shown.</p>
+
+<h3>8. Design review: v1 to v2</h3>
+<div class="scroll"><table><thead><tr><th>Issue found in v1</th><th>Why it matters</th><th>Change in v2</th></tr></thead><tbody>
+<tr><td>Step 1 was labeled a worked example, but no example was shown</td><td>The label promised support that wasn’t there</td><td>A solved example for another endpoint, then a matching problem</td></tr>
+<tr><td>Step 2 told learners the exact string to type</td><td>It was a copy task, not a decision</td><td>A scenario and an event-type reference; the learner finds the right value, with feedback for each common mistake</td></tr>
+<tr><td>Step 3 never verified a signature; it asked one policy question with an obvious wrong answer</td><td>The skill named in the title was never practiced</td><td>The learner computes the expected signature and judges three requests: valid, altered and stale</td></tr>
+<tr><td>“Score: 100%” and “Mastery Achieved” were logged regardless of attempts</td><td>The record overstated performance</td><td>First-attempt accuracy across five decisions</td></tr>
+<tr><td>Feedback said API tokens “require” Bearer as an OAuth rule</td><td>It stated a general rule that doesn’t apply to this API</td><td>The rule is framed as this fictional API’s reference</td></tr>
+<tr><td>Answers were always in the same order</td><td>A pattern could be guessed</td><td>Options and the three requests are shuffled</td></tr>
+<tr><td>Log labeled “RECORDING STATEMENTS” with nothing recorded</td><td>The label implied storage</td><td>Labeled as generated locally, with a JSON download</td></tr>
+<tr><td>Feedback not announced to screen readers</td><td>Learners using assistive technology missed the result</td><td>Live region, and smooth scrolling respects reduced-motion settings</td></tr>
+</tbody></table></div>
+<p><strong>Still not done:</strong> v2 has not been tested with real learners, a full accessibility audit has not been run, and the signing scheme is simplified.</p>
+</main>
+</body>
+</html>

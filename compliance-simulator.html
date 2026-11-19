@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PASTEL Lab // KYB / AML Compliance Decision Simulator (v2)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-offwhite: #F8FAFC;
+            --surface-white: #FFFFFF;
+            --text-slate: #0F172A;
+            --text-muted: #475569;
+            --border-subtle: #E2E8F0;
+            --accent-cobalt: #2563EB;
+            --accent-cobalt-hover: #1D4ED8;
+            --accent-emerald: #059669;
+            --accent-emerald-bg: #ECFDF5;
+            --accent-amber: #D97706;
+            --accent-amber-bg: #FFFBEB;
+            --accent-red: #DC2626;
+            --accent-red-bg: #FEF2F2;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg-offwhite);
+            color: var(--text-slate);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        /* Top Lab Bar */
+        header.lab-nav {
+            background: var(--surface-white);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.9rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .back-link {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+        .back-link:hover { color: var(--accent-cobalt); }
+        .badge-mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            background: #EFF6FF;
+            color: var(--accent-cobalt);
+            border: 1px solid #DBEAFE;
+            font-weight: 600;
+        }
+
+        /* Main Workspace */
+        main.workspace {
+            max-width: 1140px;
+            width: 100%;
+            margin: 2.5rem auto;
+            padding: 0 5%;
+            flex-grow: 1;
+        }
+        .module-header {
+            margin-bottom: 1.75rem;
+        }
+        .module-header h1 {
+            font-size: 1.85rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            margin-bottom: 0.4rem;
+        }
+        .module-header p {
+            color: var(--text-muted);
+            font-size: 0.98rem;
+        }
+
+        /* Case Queue Stepper */
+        .queue-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .queue-item {
+            background: var(--surface-white);
+            border: 1px solid var(--border-subtle);
+            padding: 0.85rem 1rem;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            opacity: 0.65;
+            transition: all 0.2s ease;
+        }
+        .queue-item.active {
+            opacity: 1;
+            border-color: var(--accent-cobalt);
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.08);
+        }
+        .queue-item.completed {
+            opacity: 1;
+            border-color: var(--accent-emerald);
+            background: var(--accent-emerald-bg);
+        }
+        .queue-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+        .queue-status {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            background: var(--bg-offwhite);
+            border: 1px solid var(--border-subtle);
+        }
+        .queue-item.completed .queue-status {
+            background: var(--accent-emerald);
+            color: white;
+            border-color: var(--accent-emerald);
+        }
+
+        /* Split Workspace Grid */
+        .compliance-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+        .panel {
+            background: var(--surface-white);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+        }
+        .panel-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 0.85rem;
+            margin-bottom: 1.25rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .panel-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-slate);
+            text-transform: uppercase;
+        }
+        .risk-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            padding: 0.2rem 0.55rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .risk-low { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
+        .risk-med { background: #FFFBEB; color: #92400E; border: 1px solid #FDE68A; }
+        .risk-high { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
+
+        /* Dossier List */
+        .dossier-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            margin-bottom: 1.25rem;
+            font-size: 0.9rem;
+        }
+        .dossier-row {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px dashed var(--border-subtle);
+        }
+        .dossier-label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .dossier-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            color: var(--text-slate);
+            text-align: right;
+        }
+
+        /* Regulatory Scaffold Box */
+        .scaffold-box {
+            background: #EFF6FF;
+            border: 1px solid #DBEAFE;
+            border-radius: 8px;
+            padding: 0.95rem 1rem;
+            font-size: 0.85rem;
+            color: var(--text-slate);
+        }
+        .scaffold-box strong {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.74rem;
+            color: var(--accent-cobalt);
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+        }
+
+        /* Decision Controls */
+        .decision-header {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .decision-sub {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1.25rem;
+        }
+        .option-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+            text-align: left;
+            background: var(--bg-offwhite);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 0.9rem 1rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+        .option-btn:hover {
+            border-color: var(--accent-cobalt);
+            background: var(--surface-white);
+            box-shadow: 0 2px 5px rgba(37, 99, 235, 0.08);
+        }
+        .option-title {
+            font-weight: 600;
+            font-size: 0.92rem;
+            color: var(--text-slate);
+            margin-bottom: 0.15rem;
+        }
+        .option-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Feedback Box */
+        .feedback-box {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            display: none;
+        }
+        .feedback-box.error {
+            display: block;
+            background: var(--accent-red-bg);
+            border: 1px solid #FECACA;
+            color: #991B1B;
+        }
+        .feedback-box.success {
+            display: block;
+            background: var(--accent-emerald-bg);
+            border: 1px solid #A7F3D0;
+            color: #065F46;
+        }
+        .btn-next {
+            margin-top: 0.85rem;
+            background: var(--accent-cobalt);
+            color: white;
+            border: none;
+            padding: 0.65rem 1.15rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .btn-next:hover { background: var(--accent-cobalt-hover); }
+
+        /* xAPI Drawer */
+        .xapi-drawer {
+            max-width: 1140px;
+            width: 100%;
+            margin: 0 auto 2.5rem auto;
+            padding: 0 5%;
+        }
+        .xapi-box {
+            background: var(--surface-white);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 1.25rem;
+        }
+        .xapi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+        }
+        .xapi-feed {
+            background: var(--bg-offwhite);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            padding: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            max-height: 130px;
+            overflow-y: auto;
+            color: var(--text-muted);
+        }
+        .xapi-entry {
+            padding: 0.25rem 0;
+            border-bottom: 1px dashed var(--border-subtle);
+        }
+        .xapi-entry:last-child { border-bottom: none; }
+
+        @media (max-width: 880px) {
+            .compliance-grid, .queue-bar { grid-template-columns: 1fr; }
+        }
+    .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+        .queue-bar{flex-wrap:wrap;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+    </style>
+</head>
+<body>
+
+    <header class="lab-nav">
+        <a href="index.html#portfolio" class="back-link">&larr; Back to PASTEL Studio</a>
+        <span class="badge-mono">MOD_03 // RISK &amp; AML ASSESSMENT // v2</span>
+    </header>
+
+    <main class="workspace">
+        <div class="module-header">
+            <h1>KYB / AML Compliance Decision Simulator</h1>
+            <p>Two-stage risk decisions: review a corporate entity dossier, choose a proportionate response, and decide again when new information arrives. Fictional entities and a fictional policy.</p>
+            <p style="font-size:.85rem;color:var(--text-muted);">Version 2, revised after a design review. <a href="process.html#compliance">Read the case file</a> or see the <a href="compliance-simulator-v1.html">archived v1</a>.</p>
+        </div>
+
+        <div class="queue-bar" id="queue-bar" aria-label="Case queue"></div>
+
+        <!-- Split Workspace -->
+        <div class="compliance-grid">
+            <!-- Left: Entity Dossier -->
+            <div class="panel" id="dossier-panel">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- Right: Decision Gateway -->
+            <div class="panel" id="action-panel">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Live xAPI Telemetry -->
+    <section class="xapi-drawer" aria-label="Live xAPI Telemetry">
+        <div class="xapi-box">
+            <div class="xapi-header">
+                <span style="font-weight: 600; color: var(--text-slate);">// xAPI STATEMENT LOG (GENERATED LOCALLY)</span>
+                <span style="color: var(--text-muted);">● NOT SENT TO AN LRS &nbsp;<button class="btn-next" style="margin:0;padding:.2rem .6rem" onclick="downloadStatements()">Download JSON</button></span>
+            </div>
+            <div class="xapi-feed" id="xapi-feed"></div>
+        </div>
+    </section>
+
+    <div id="sr-live" class="sr-only" aria-live="polite"></div>
+    <script>
+        // Fictional policy and entities. Each case has one or two decision nodes; a second node appears when new information arrives.
+        const CASES = [
+            { id:"CASE-101", entity:"Nordic SaaS Solutions ApS", jurisdiction:"Copenhagen, Denmark", ownership:"Transparent: owners verified in the company registry", volume:"$45,000 per month, recurring B2B software, matching the onboarding profile", pep:"No matches",
+              nodes:[{ options:["approve","request","escalate"], correct:"approve", rationale:"Every identifier checks out and the activity matches the expected profile, so standard onboarding is the proportionate response.",
+                wrong:{ request:"Nothing here is unexplained. Asking for more documents adds friction without a reason.", escalate:"No sign of concealment or unusual activity. Escalating would take the officer’s time for nothing." } }] },
+            { id:"CASE-104", entity:"Apex Global Holdings Ltd.", jurisdiction:"British Virgin Islands", ownership:"Bearer shares and nominee directors; the beneficial owner is not identified", volume:"$850,000 cross-border wire in the first week", pep:"Possible match: a family member of a regional transport minister",
+              nodes:[
+                { options:["approve","request","escalate"], correct:"request", rationale:"The open items (who owns the entity, where the money comes from, the possible PEP link) are things the client can document, so ask first.",
+                  wrong:{ approve:"The beneficial owner is unidentified and a PEP link is possible. Approving skips the checks the policy requires.", escalate:"These items could still have a legitimate explanation. Request the documents before escalating." } },
+                { info:"The client replies. The documents name an individual as the owner, but the stated source of wealth (shipping contracts) doesn’t match where the wire came from, and the nominee directors can’t be reached.", options:["approve","monitor","escalate"], correct:"escalate",
+                  rationale:"The open items are still unexplained after documentation. This now needs the compliance officer’s decision.",
+                  wrong:{ approve:"The owner is still unverified and the documents don’t match the wire. Don’t approve.", monitor:"Monitoring doesn’t fix an unverified owner and a source of wealth that doesn’t match. The officer needs to decide." } }] },
+            { id:"CASE-109", entity:"Valletta Digital Assets SARL", jurisdiction:"Valletta, Malta", ownership:"Listed directors appear to be shell roles; login IP addresses don’t match their stated countries", volume:"$3.2M moved from crypto to fiat in rapid, split transfers over several days", pep:"No matches",
+              nodes:[{ options:["approve","request","escalate"], correct:"escalate", rationale:"The pattern itself points to layering or sanctions evasion. Escalate immediately and don’t contact the client about it. The compliance officer decides on any report or freeze.",
+                wrong:{ approve:"The metadata mismatch and rapid layering are serious indicators. Approving would be a serious control failure.", request:"With active layering indicators, asking the client to explain could alert them. Escalate instead." } }] },
+            { id:"CASE-112", entity:"Harborline Marine Supply Inc.", jurisdiction:"Vancouver, Canada", ownership:"Transparent: two owners verified in the company registry", volume:"Expected $20,000 per month; $210,000 received in the first 30 days", pep:"No matches",
+              nodes:[
+                { options:["approve","request","escalate"], correct:"request", rationale:"One item doesn’t match the expected profile, and the client can probably explain it. Ask before deciding.",
+                  wrong:{ approve:"The activity doesn’t match the expected profile. Ask about it before approving.", escalate:"Nothing suggests concealment. A single unexplained mismatch is a reason to ask first." } },
+                { info:"The client provides a signed supply contract with a new customer, and the invoices match the payments received.", options:["approve","monitor","escalate"], correct:"monitor",
+                  rationale:"The explanation is documented and consistent. Onboard, and keep closer monitoring for a set period given the jump from the expected profile.",
+                  wrong:{ approve:"The risk is explained, but a large jump from the expected profile still warrants a monitoring period.", escalate:"The explanation is documented and consistent. Escalating would be over-escalation." } }] }
+        ];
+        const OPT = {
+            approve:["Approve onboarding","Clear the entity for standard onboarding."],
+            monitor:["Approve with enhanced monitoring","Onboard, with closer transaction monitoring for a set period."],
+            request:["Request additional information","Ask the client for documents that explain the open items."],
+            escalate:["Escalate to the compliance officer","Hand the case over; the officer decides on any report or freeze."]
+        };
+        const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+        const queue = shuffle(CASES);
+        const TOTAL_NODES = CASES.reduce((n, c) => n + c.nodes.length, 0);
+        let ci = 0, ni = 0, attempts = 0, firstTry = 0, answered = false, done = false;
+        const xapiFeed = document.getElementById('xapi-feed');
+        const statements = [];
+        const HOME = "https://leonildoalexandremorgado.github.io/PASTEL/";
+        const sessionId = "anon-" + Math.random().toString(36).slice(2, 8);
+        const VERBS = { initialized:"http://adlnet.gov/expapi/verbs/initialized", answered:"http://adlnet.gov/expapi/verbs/answered", completed:"http://adlnet.gov/expapi/verbs/completed" };
+        const announce = m => { document.getElementById('sr-live').textContent = m; };
+
+        // Builds an xAPI-structured statement and keeps it in memory. Nothing is sent to an LRS.
+        function logXAPI(verb, objId, objName, result, summary) {
+            const st = { actor:{ objectType:"Agent", account:{ homePage:HOME, name:sessionId } }, verb:{ id:VERBS[verb], display:{ "en-US":verb } },
+                         object:{ objectType:"Activity", id:HOME + "compliance-simulator.html#" + objId, definition:{ name:{ "en-US":objName } } }, timestamp:new Date().toISOString() };
+            if (result) st.result = result;
+            statements.push(st);
+            const div = document.createElement('div');
+            div.className = 'xapi-entry';
+            div.innerHTML = `<span style="color:#2563EB">[${st.timestamp.slice(11, 19)}]</span> Analyst <strong>${verb}</strong> <em>${objName}</em>${summary ? ` — <span style="color:#059669">${summary}</span>` : ''}`;
+            xapiFeed.prepend(div);
+        }
+        function downloadStatements() {
+            const blob = new Blob([JSON.stringify(statements, null, 2)], { type:"application/json" });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob); a.download = "compliance-simulator-xapi-statements.json"; a.click();
+            URL.revokeObjectURL(a.href);
+        }
+        function updateQueueUI() {
+            document.getElementById('queue-bar').innerHTML = queue.map((c, i) => {
+                const state = (i < ci || done) ? 'completed' : (i === ci ? 'active' : '');
+                const label = (i < ci || done) ? 'RESOLVED' : (i === ci ? 'IN REVIEW' : 'QUEUED');
+                return `<div class="queue-item ${state}"><span class="queue-id">${c.id}</span><span class="queue-status">${label}</span></div>`;
+            }).join('');
+        }
+        function renderNode() {
+            updateQueueUI();
+            const c = queue[ci], n = c.nodes[ni];
+            const row = (l, v) => `<div class="dossier-row"><span class="dossier-label">${l}</span><span class="dossier-value">${v}</span></div>`;
+            document.getElementById('dossier-panel').innerHTML = `
+                <div class="panel-topbar"><span class="panel-title">Entity Dossier // ${c.id}</span></div>
+                <div class="dossier-grid">${row('Corporate Entity', c.entity)}${row('Domicile / Jurisdiction', c.jurisdiction)}${row('Ownership Structure', c.ownership)}${row('Projected Volume', c.volume)}${row('PEP Screening', c.pep)}</div>
+                ${n.info ? `<div class="scaffold-box" style="border-color:#2563EB;"><strong>New information</strong><p style="font-size:0.85rem;margin-top:0.2rem;">${n.info}</p></div>` : ''}
+                <div class="scaffold-box">
+                    <strong>Job Aid // Escalation Policy (fictional)</strong>
+                    <ul style="margin:0.4rem 0 0 1.1rem; font-size:0.82rem; color:var(--text-muted);">
+                        <li><strong>Approve:</strong> identifiers verified, ownership transparent, activity matches the expected profile.</li>
+                        <li><strong>Request information:</strong> open items the client could explain with documents.</li>
+                        <li><strong>Approve with monitoring:</strong> risk explained and documented, but worth watching.</li>
+                        <li><strong>Escalate:</strong> signs of concealment, layering or sanctions evasion, or risk still unexplained after documents. Don’t contact the client about the concern. The compliance officer decides on any report or freeze.</li>
+                    </ul>
+                </div>`;
+            document.getElementById('action-panel').innerHTML = `
+                <div class="panel-topbar"><span class="panel-title">Compliance Decision Gateway</span><span class="risk-badge" style="background:#F1F5F9; color:var(--text-slate);">Case ${ci + 1} of ${queue.length}${c.nodes.length > 1 ? ' // Decision ' + (ni + 1) + ' of ' + c.nodes.length : ''}</span></div>
+                <div class="decision-header">Select Response</div>
+                <p class="decision-sub">${ni === 0 ? 'Choose the proportionate response to this dossier.' : 'Decide again, now that new information has arrived.'}</p>
+                ${shuffle(n.options).map(k => `<button class="option-btn" onclick="evaluateDecision('${k}')"><span class="option-title">${OPT[k][0]}</span><span class="option-desc">${OPT[k][1]}</span></button>`).join('')}
+                <div id="feedback" class="feedback-box"></div>`;
+        }
+        function evaluateDecision(choice) {
+            if (answered) return;
+            const c = queue[ci], n = c.nodes[ni], fb = document.getElementById('feedback'), objId = c.id + '-decision-' + (ni + 1);
+            attempts++;
+            if (choice === n.correct) {
+                answered = true;
+                if (attempts === 1) firstTry++;
+                const moreNodes = ni < c.nodes.length - 1, last = ci === queue.length - 1 && !moreNodes;
+                fb.className = 'feedback-box success';
+                fb.innerHTML = `<strong>✓ Proportionate response:</strong> ${n.rationale}<br>` + (moreNodes
+                    ? `<button class="btn-next" onclick="advance()">Review new information &rarr;</button>`
+                    : last ? `<div style="margin-top:0.75rem; font-weight:600;">Queue cleared. First-attempt accuracy: ${firstTry} of ${TOTAL_NODES} decisions.</div>`
+                           : `<button class="btn-next" onclick="advance()">Next compliance case &rarr;</button>`);
+                announce("Correct. " + n.rationale);
+                logXAPI('answered', objId, objId, { success:true, response:choice }, `${choice} (attempt ${attempts})`);
+                if (last) {
+                    done = true; updateQueueUI();
+                    logXAPI('completed', 'simulator', 'KYB / AML Compliance Decision Simulator', { score:{ raw:firstTry, max:TOTAL_NODES, scaled:firstTry / TOTAL_NODES } }, `${firstTry} of ${TOTAL_NODES} correct on first attempt`);
+                }
+            } else {
+                fb.className = 'feedback-box error';
+                fb.innerHTML = `<strong>✕ Not proportionate:</strong> ${n.wrong[choice]}`;
+                announce("Not quite. " + n.wrong[choice]);
+                logXAPI('answered', objId, objId, { success:false, response:choice }, `${choice} (attempt ${attempts})`);
+            }
+        }
+        function advance() {
+            if (ni < queue[ci].nodes.length - 1) ni++; else { ci++; ni = 0; }
+            attempts = 0; answered = false;
+            renderNode();
+            window.scrollTo({ top:0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+        }
+        logXAPI('initialized', 'simulator', 'KYB / AML Compliance Decision Simulator');
+        renderNode();
+    </script>
+</body>
+</html>
